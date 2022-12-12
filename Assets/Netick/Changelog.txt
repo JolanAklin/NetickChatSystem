@@ -1,0 +1,3 @@
+ ### [0.9.10] Changelog - 2022/12/1
+
+- Fixed a bug in a feature added in the previous version.
