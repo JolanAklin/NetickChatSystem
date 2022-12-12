@@ -6,27 +6,15 @@ using Netick.Transport;
 using LiteNetLib.Utils;
 using LiteNetLib;
 
+[RequireComponent(typeof(ConnectionsManager))]
 public class ChatNetworkEventsListner : NetworkEventsListner
 {
-    // network connection id and it's related network connection
-    private Dictionary<int, NetworkConnection> _connections;
-    public Dictionary<int, NetworkConnection> Connections { get => _connections; }
-
-    private NetworkConnection _serverConnection;
-    public NetworkConnection ServerConnection { get => _serverConnection; }
-
-    private ChatLiteNetTransport _transport;
-
-
-    protected void Awake() {
-        _connections = new Dictionary<int, NetworkConnection>();
-    }
-
+    private ConnectionsManager _connectionsManager;
     public override void OnStartup(NetworkSandbox sandbox)
     {
         try
         {
-            _transport = (ChatLiteNetTransport)Sandbox.Config.GetTransport();
+            _connectionsManager = GetComponent<ConnectionsManager>();
             ChatMessager chat = GetComponent<ChatMessager>();
             chat.Init(Sandbox, this);
         }
@@ -38,13 +26,12 @@ public class ChatNetworkEventsListner : NetworkEventsListner
 
     public override void OnShutdown(NetworkSandbox sandbox)
     {
-        _serverConnection = null;
-        _connections.Clear();
+        _connectionsManager.Clear();
     }
 
     public override void OnConnectedToServer(NetworkSandbox sandbox, NetworkConnection server)
     {
-        _serverConnection = server;
+        _connectionsManager.SetServerConnection(server);
     }
 
     // add client to dictionary
@@ -56,7 +43,8 @@ public class ChatNetworkEventsListner : NetworkEventsListner
     }
     public void AddNetConnection(NetworkConnection connection)
     {
-        _connections.Add(connection.Id, connection);
+        _connectionsManager.AddId2NetCon(connection.Id, connection);
+        _connectionsManager.AddNetickConnection2NetCon(connection.TransportConnection, connection);
     }
 
     // remove client from dictionary
@@ -66,20 +54,12 @@ public class ChatNetworkEventsListner : NetworkEventsListner
     {
         RemoveNetConnection(client);
     }
+
     public void RemoveNetConnection(NetworkConnection connection)
     {
-        RemoveNetConnection(connection.Id);
-    }
-    public void RemoveNetConnection(int id)
-    {
-        if(_connections.ContainsKey(id))
-            _connections.Remove(id);
-        else
-            Debug.LogWarning("Trying to remove a NetworkConnection that wasn't registred. Connection ID : " + id);
-    }
-
-    public void SendToServer()
-    {
-        
+        if(!_connectionsManager.RemoveNetConByNetickConnection(connection.TransportConnection))
+            Debug.LogWarning("Trying to remove a NetworkConnection that wasn't registred.");
+        if(!_connectionsManager.RemoveNetConById(connection.Id))
+            Debug.LogWarning("Trying to remove a NetworkConnection that wasn't registred. Connection ID : " + connection.Id);
     }
 }

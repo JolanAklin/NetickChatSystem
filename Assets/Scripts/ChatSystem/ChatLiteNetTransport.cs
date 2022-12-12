@@ -16,6 +16,7 @@ namespace Netick.Transport
     public class ChatLiteNetTransport : NetworkTransport, INetEventListener
     {
 
+        #region on message recieve event
         public static event EventHandler<OnChatReceiveEventArgs> _onChatReceive;
         public class OnChatReceiveEventArgs : EventArgs
         {
@@ -26,6 +27,7 @@ namespace Netick.Transport
                 this.message = message;
             }
         }
+        #endregion
 
         public class LNLConnection : NetickConnection
         {
@@ -116,8 +118,6 @@ namespace Netick.Transport
                 _writer.Put(connectionData, 0, connectionDataLen);
                 _netManager.Connect(address, port, _writer);
             }
-
-
         }
 
         public override void Disconnect(NetickConnection connection)

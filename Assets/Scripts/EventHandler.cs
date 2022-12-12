@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Netick;
+using Netick.Transport;
 
 public class EventHandler : ChatNetworkEventsListner
 {
     private ChatMessager _chat;
 
-    new protected void Awake()
+    private void Awake()
     {
-        base.Awake();
         _chat = GetComponent<ChatMessager>();
     }
 
