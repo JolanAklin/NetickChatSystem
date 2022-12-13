@@ -15,6 +15,8 @@ public class ChatMessenger : MonoBehaviour
     private NetDataWriter _writer = new NetDataWriter();
     private ConnectionsManager _connectionManager;
 
+    [SerializeField] private SenderStyler _senderStyle;
+
     public event System.EventHandler<OnClientReceiveChatMessageEventArgs> OnClientReceiveChatMessage;
 
     public class OnClientReceiveChatMessageEventArgs : System.EventArgs {
@@ -60,27 +62,38 @@ public class ChatMessenger : MonoBehaviour
             Debug.LogError("NetworkConnection not found");
             return;
         }
-        SendChatMessageToAll($"<color=red>[client {netConn.Id}]</color> {message}");
+        _connectionManager.GetNetConByNetickConnection(connection, out NetworkConnection netCon);
+        SendChatMessageToAll(message, new DefaultStyle.DefaultStylerData(true, netCon.Id));
         Debug.Log($"[FROM CLIENT] {message} {_sandbox.name}");
     }
 
-    public void SendChatMessageToOne(string message, NetworkConnection client)
+    public void SendChatMessageToOne(string message, NetworkConnection client, SenderStyler.StylerData data)
     {
-        SendChatMessage(message, client);
+        if (_sandbox.IsClient)
+        {
+            Debug.LogWarning("Message not sent. You are calling this function from the client. It should only be called on the server.");
+            return;
+        }
+        SendChatMessage(message, client, data);
     }
 
-    public void SendChatMessageToAll(string message)
+    public void SendChatMessageToAll(string message, SenderStyler.StylerData data)
     {
+        if (_sandbox.IsClient)
+        {
+            Debug.LogWarning("Message not sent. You are calling this function from the client. It should only be called on the server.");
+            return;
+        }
         foreach (NetworkConnection client in _connectionManager.GetConnections())
         {
-            SendChatMessage(message, client);
+            SendChatMessage(message, client, data);
         }
     }
-    private void SendChatMessage(string message, NetworkConnection client)
+    private void SendChatMessage(string message, NetworkConnection client, SenderStyler.StylerData data)
     {
         _writer.Reset();
         _writer.Put(true); // true = sent by the server
-        _writer.Put(message);
+        _writer.Put(_senderStyle.GetSenderStyle(data) + message);
         ChatLiteNetTransport.LNLConnection connection = (ChatLiteNetTransport.LNLConnection)client.TransportConnection;
         connection.ChatSend(_writer.Data, _writer.Data.Length);
     }
