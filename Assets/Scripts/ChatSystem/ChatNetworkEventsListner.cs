@@ -15,7 +15,7 @@ public class ChatNetworkEventsListner : NetworkEventsListner
         try
         {
             _connectionsManager = GetComponent<ConnectionsManager>();
-            ChatMessager chat = GetComponent<ChatMessager>();
+            ChatMessenger chat = GetComponent<ChatMessenger>();
             chat.Init(Sandbox, this);
         }
         catch (System.Exception)

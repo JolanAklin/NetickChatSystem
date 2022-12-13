@@ -7,13 +7,24 @@ using LiteNetLib.Utils;
 
 [RequireComponent(typeof(ChatNetworkEventsListner))]
 [RequireComponent(typeof(ConnectionsManager))]
-public class ChatMessager : MonoBehaviour
+public class ChatMessenger : MonoBehaviour
 {
     public bool isInitialized {get; private set;}
     private NetworkSandbox _sandbox;
     private ChatNetworkEventsListner _listener;
     private NetDataWriter _writer = new NetDataWriter();
     private ConnectionsManager _connectionManager;
+
+    public event System.EventHandler<OnClientReceiveChatMessageEventArgs> OnClientReceiveChatMessage;
+
+    public class OnClientReceiveChatMessageEventArgs : System.EventArgs {
+        public string message;
+
+        public OnClientReceiveChatMessageEventArgs (string message)
+        {
+            this.message = message;
+        }
+    }
 
     public void Init (NetworkSandbox sandbox, ChatNetworkEventsListner listner)
     {
@@ -31,26 +42,31 @@ public class ChatMessager : MonoBehaviour
     }
 
     // called when receiving a chat message
-    // will only be called on the client
     private void OnChatMessageReceivedHandler(object sender, ChatLiteNetTransport.OnChatReceiveEventArgs e)
     {
         NetDataReader reader = new NetDataReader(e.message);
         bool fromServer = reader.GetBool();
         string message = reader.GetString();
         if(fromServer && _sandbox.IsClient)
-            OnClientReceiveChatMessage(message);
+            OnClientReceiveChatMessage?.Invoke(this, new OnClientReceiveChatMessageEventArgs(message));
         if(!fromServer && _sandbox.IsServer)
-            OnServerReceiveChatMessage(message);
+            OnServerReceiveChatMessage(message, e.connection);
     }
 
-    private void OnClientReceiveChatMessage(string message)
+    private void OnServerReceiveChatMessage(string message, NetickConnection connection)
     {
-        Debug.Log($"[FROM SERVER] {message} {_sandbox.name}");
-    }
-
-    private void OnServerReceiveChatMessage(string message)
-    {
+        if(!_connectionManager.GetNetConByNetickConnection(connection, out NetworkConnection netConn))
+        {
+            Debug.LogError("NetworkConnection not found");
+            return;
+        }
+        SendChatMessageToAll($"<color=red>[client {netConn.Id}]</color> {message}");
         Debug.Log($"[FROM CLIENT] {message} {_sandbox.name}");
+    }
+
+    public void SendChatMessageToOne(string message, NetworkConnection client)
+    {
+        SendChatMessage(message, client);
     }
 
     public void SendChatMessageToAll(string message)

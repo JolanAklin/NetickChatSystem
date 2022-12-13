@@ -21,10 +21,12 @@ namespace Netick.Transport
         public class OnChatReceiveEventArgs : EventArgs
         {
             public byte[] message;
+            public NetickConnection connection;
 
-            public OnChatReceiveEventArgs (byte[] message)
+            public OnChatReceiveEventArgs (byte[] message, NetickConnection connection)
             {
                 this.message = message;
+                this.connection = connection;
             }
         }
         #endregion
@@ -203,7 +205,7 @@ namespace Netick.Transport
 
             if (deliveryMethod == DeliveryMethod.ReliableOrdered)
             {
-                _onChatReceive?.Invoke(this, new OnChatReceiveEventArgs(_bytes));
+                _onChatReceive?.Invoke(this, new OnChatReceiveEventArgs(_bytes, _clients[peer]));
             }
             else
             {
