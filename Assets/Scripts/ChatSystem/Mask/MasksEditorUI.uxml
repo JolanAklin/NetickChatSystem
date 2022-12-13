@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Assets/Scripts/ChatSystem/Mask/MaskUIStyleSheet.uss?fileID=7433441132597879392&amp;guid=e2bbc10d028891e4c81bc1e4f0f3d30f&amp;type=3#MaskUIStyleSheet" />
+    <ui:VisualElement>
+        <ui:ListView focusable="true" binding-path="_masksName" fixed-item-height="20" show-border="false" header-title="Chat masks" show-bound-collection-size="false" horizontal-scrolling="false" show-alternating-row-backgrounds="None" reorderable="false" style="width: 100%;" />
+    </ui:VisualElement>
+</ui:UXML>

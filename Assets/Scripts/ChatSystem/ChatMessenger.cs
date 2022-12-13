@@ -16,6 +16,8 @@ public class ChatMessenger : MonoBehaviour
     private ConnectionsManager _connectionManager;
 
     [SerializeField] private SenderStyler _senderStyle;
+    [SerializeField] private ChatMasks _masks;
+    public static ChatMasks Masks {get; private set;}
 
     public event System.EventHandler<OnClientReceiveChatMessageEventArgs> OnClientReceiveChatMessage;
 
@@ -33,6 +35,7 @@ public class ChatMessenger : MonoBehaviour
         _sandbox = sandbox;
         _listener = listner;
         _connectionManager = GetComponent<ConnectionsManager>();
+        Masks = _masks;
         ChatLiteNetTransport._onChatReceive += OnChatMessageReceivedHandler;
 
         isInitialized = true;
@@ -64,7 +67,6 @@ public class ChatMessenger : MonoBehaviour
         }
         _connectionManager.GetNetConByNetickConnection(connection, out NetworkConnection netCon);
         SendChatMessageToAll(message, new DefaultStyle.DefaultStylerData(true, netCon.Id));
-        Debug.Log($"[FROM CLIENT] {message} {_sandbox.name}");
     }
 
     public void SendChatMessageToOne(string message, NetworkConnection client, SenderStyler.StylerData data)
@@ -110,5 +112,24 @@ public class ChatMessenger : MonoBehaviour
         _writer.Put(message);
         ChatLiteNetTransport.LNLConnection connection = (ChatLiteNetTransport.LNLConnection)_connectionManager.ServerConnection.TransportConnection;
         connection.ChatSend(_writer.Data, _writer.Data.Length);
+    }
+
+    public class ChatFlag
+    {
+        public uint flag {get; private set;}
+
+        public void AddMask(string maskName)
+        {
+            if(!ChatMessenger.Masks.GetMask(maskName, out uint mask))
+                return;
+            flag =  mask | flag;
+        }
+
+        public void RemoveMask(string maskName)
+        {
+            if (!ChatMessenger.Masks.GetMask(maskName, out uint mask))
+                return;
+            flag = (~mask) & flag;
+        }
     }
 }
