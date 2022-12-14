@@ -8,6 +8,7 @@ public class ConnectionsManager : MonoBehaviour
 {
     // network connection id and it's related network connection
     private Dictionary<int, NetworkConnection> _connections;
+    // use for linking a netickconnection to it's related networkconnection
     private Dictionary<NetickConnection, NetworkConnection> _netickConnection2NetworkConnection;
 
     private NetworkConnection _serverConnection;
@@ -15,11 +16,24 @@ public class ConnectionsManager : MonoBehaviour
 
     private ChatLiteNetTransport _transport;
 
+    #region events
+    // called when an item is added in _connections
+    public event System.EventHandler<OnNetworkConnectionEventArgs> OnNetworkConnectionAdded;
+    // called when an item is removed from _connections
+    public event System.EventHandler<OnNetworkConnectionEventArgs> OnNetworkConnectionRemoved;
+
+    public class OnNetworkConnectionEventArgs : System.EventArgs
+    {
+        public NetworkConnection connection;
+    }
+    #endregion
+
     private void Awake() {
         _connections = new Dictionary<int, NetworkConnection>();
         _netickConnection2NetworkConnection = new Dictionary<NetickConnection, NetworkConnection>();
     }
 
+    #region getters and setters
     public bool GetNetConById(int id, out NetworkConnection connection)
     {
         return _connections.TryGetValue(id, out connection);
@@ -34,6 +48,7 @@ public class ConnectionsManager : MonoBehaviour
         if(_connections.ContainsKey(id))
             return false;
         _connections.Add(id, connection);
+        OnNetworkConnectionAdded?.Invoke(this, new OnNetworkConnectionEventArgs() {connection = connection});
         return true;
     }
 
@@ -47,6 +62,8 @@ public class ConnectionsManager : MonoBehaviour
 
     public bool RemoveNetConById(int id)
     {
+        if(_connections.ContainsKey(id))
+            OnNetworkConnectionRemoved?.Invoke(this, new OnNetworkConnectionEventArgs() { connection = _connections[id] });
         return _connections.Remove(id);
     }
 
@@ -71,7 +88,8 @@ public class ConnectionsManager : MonoBehaviour
         _connections.Values.CopyTo(conns, 0);
         return conns;
     }
-
+    #endregion
+    
     public void Clear()
     {
         _connections.Clear();

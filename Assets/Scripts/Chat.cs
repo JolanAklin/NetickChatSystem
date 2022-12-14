@@ -20,7 +20,7 @@ public class Chat : MonoBehaviour
 
     public void SendMessage(TMP_InputField message)
     {
-        _messenger.SendToServer(message.text);
+        _messenger.SendToServer(message.text, ScopeManager.Scope.Everyone);
         message.text = "";
     }
 

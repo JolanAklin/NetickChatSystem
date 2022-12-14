@@ -7,6 +7,7 @@ using LiteNetLib.Utils;
 
 [RequireComponent(typeof(ChatNetworkEventsListner))]
 [RequireComponent(typeof(ConnectionsManager))]
+[RequireComponent(typeof(ScopeManager))]
 public class ChatMessenger : MonoBehaviour
 {
     public bool isInitialized {get; private set;}
@@ -14,6 +15,9 @@ public class ChatMessenger : MonoBehaviour
     private ChatNetworkEventsListner _listener;
     private NetDataWriter _writer = new NetDataWriter();
     private ConnectionsManager _connectionManager;
+    private ScopeManager _scopeManager;
+
+    private Dictionary<NetworkConnection, ScopeManager.Scope> _connectionsScope = new Dictionary<NetworkConnection, ScopeManager.Scope>();
 
     [SerializeField] private SenderStyler _senderStyle;
 
@@ -28,19 +32,44 @@ public class ChatMessenger : MonoBehaviour
         }
     }
 
+    // initialize the chat manager
     public void Init (NetworkSandbox sandbox, ChatNetworkEventsListner listner)
     {
         _sandbox = sandbox;
         _listener = listner;
         _connectionManager = GetComponent<ConnectionsManager>();
+        _scopeManager = GetComponent<ScopeManager>();
         ChatLiteNetTransport._onChatReceive += OnChatMessageReceivedHandler;
 
+        _connectionManager.OnNetworkConnectionAdded += OnNewConnection;
+        _connectionManager.OnNetworkConnectionRemoved += OnRemoveConnection;
+
         isInitialized = true;
+    }
+
+    // register a scope for the new connection
+    private void OnNewConnection(object sender, ConnectionsManager.OnNetworkConnectionEventArgs e)
+    {
+        _connectionsScope.Add(e.connection, ScopeManager.Scope.Everyone);
+    }
+    // remove the connection's scope
+    private void OnRemoveConnection(object sender, ConnectionsManager.OnNetworkConnectionEventArgs e)
+    {
+        _connectionsScope.Remove(e.connection);
+    }
+
+    public ScopeManager.Scope GetScope(NetworkConnection connection)
+    {
+        if(_connectionsScope.TryGetValue(connection, out ScopeManager.Scope scope))
+            return scope;
+        return null;
     }
 
     public void OnDestroy()
     {
         ChatLiteNetTransport._onChatReceive -= OnChatMessageReceivedHandler;
+        _connectionManager.OnNetworkConnectionAdded -= OnNewConnection;
+        _connectionManager.OnNetworkConnectionRemoved -= OnRemoveConnection;
     }
 
     // called when receiving a chat message
@@ -49,12 +78,15 @@ public class ChatMessenger : MonoBehaviour
         NetDataReader reader = new NetDataReader(e.message);
         bool fromServer = reader.GetBool();
         string message = reader.GetString();
+        // when the client and the server run on the same machine, both receive server and client messages.
+        // this is for separating them
         if(fromServer && _sandbox.IsClient)
             OnClientReceiveChatMessage?.Invoke(this, new OnClientReceiveChatMessageEventArgs(message));
         if(!fromServer && _sandbox.IsServer)
             OnServerReceiveChatMessage(message, e.connection);
     }
 
+    // client have to send theyre message to the server and the server then dispatches them to the right clients
     private void OnServerReceiveChatMessage(string message, NetickConnection connection)
     {
         if(!_connectionManager.GetNetConByNetickConnection(connection, out NetworkConnection netConn))
@@ -63,10 +95,13 @@ public class ChatMessenger : MonoBehaviour
             return;
         }
         _connectionManager.GetNetConByNetickConnection(connection, out NetworkConnection netCon);
-        SendChatMessageToAll(message, new DefaultStyle.DefaultStylerData(true, netCon.Id));
+        SendChatMessageToScope(message, new DefaultStyle.DefaultStylerData(true, netCon.Id), ScopeManager.Scope.Everyone);
         Debug.Log($"[FROM CLIENT] {message} {_sandbox.name}");
     }
 
+    ///<summary>
+    /// Send a message to a particular client. Server only
+    ///</summary>
     public void SendChatMessageToOne(string message, NetworkConnection client, SenderStyler.StylerData data)
     {
         if (_sandbox.IsClient)
@@ -77,7 +112,10 @@ public class ChatMessenger : MonoBehaviour
         SendChatMessage(message, client, data);
     }
 
-    public void SendChatMessageToAll(string message, SenderStyler.StylerData data)
+    ///<summary>
+    /// Send a message to all the client that match the given scope. Server only.
+    ///</summary>
+    public void SendChatMessageToScope(string message, SenderStyler.StylerData data, ScopeManager.Scope scope)
     {
         if (_sandbox.IsClient)
         {
@@ -86,9 +124,11 @@ public class ChatMessenger : MonoBehaviour
         }
         foreach (NetworkConnection client in _connectionManager.GetConnections())
         {
-            SendChatMessage(message, client, data);
+            if(_connectionsScope[client].CheckAgainst(_scopeManager.GetScope("Red team")))
+                SendChatMessage(message, client, data);
         }
     }
+
     private void SendChatMessage(string message, NetworkConnection client, SenderStyler.StylerData data)
     {
         _writer.Reset();
@@ -98,7 +138,10 @@ public class ChatMessenger : MonoBehaviour
         connection.ChatSend(_writer.Data, _writer.Data.Length);
     }
 
-    public void SendToServer(string message)
+    ///<summary>
+    /// Send a message to the server to dispatch to other client with the given scope
+    ///</summary>
+    public void SendToServer(string message, ScopeManager.Scope scope)
     {
         if(_sandbox.IsServer)
         {
