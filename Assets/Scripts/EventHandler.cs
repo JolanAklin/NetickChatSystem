@@ -22,7 +22,7 @@ public class EventHandler : ChatNetworkEventsListner
     {
         base.OnClientConnected(sandbox, client);
 
-        _chat.SendChatMessageToOne("I'm sending a very long message to test if the code will break or still hold up good but i think there will be a moment were the sentence will be cut and you'll never be able to read all of it", client, new DefaultStyle.DefaultStylerData(false));
+        _chat.SendChatMessageToOne("I'm sending a very long message to test if the code will break or still hold up good but i think there will be a moment were the sentence will be cut and you'll never be able to read all of it", client, ChatMessenger.Styler.GenerateData());
         if(client.Id == 0)
         {
             _chat.GetScope(client).AddScope(_scopeManager.GetScope("Red team"));

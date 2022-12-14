@@ -20,6 +20,7 @@ public class ChatMessenger : MonoBehaviour
     private Dictionary<NetworkConnection, ScopeManager.Scope> _connectionsScope = new Dictionary<NetworkConnection, ScopeManager.Scope>();
 
     [SerializeField] private SenderStyler _senderStyle;
+    public static SenderStyler Styler {get; private set;}
     [Tooltip("If true, client are allowed to send message in any scopes, disregarding theirs.")]
     [SerializeField] private bool _allowForeignSends = false;
 
@@ -42,6 +43,7 @@ public class ChatMessenger : MonoBehaviour
         _connectionManager = GetComponent<ConnectionsManager>();
         _scopeManager = GetComponent<ScopeManager>();
         ChatLiteNetTransport._onChatReceive += OnChatMessageReceivedHandler;
+        Styler = _senderStyle;
 
         _connectionManager.OnNetworkConnectionAdded += OnNewConnection;
         _connectionManager.OnNetworkConnectionRemoved += OnRemoveConnection;
@@ -127,16 +129,16 @@ public class ChatMessenger : MonoBehaviour
         }
         _connectionManager.GetNetConByNetickConnection(sender, out NetworkConnection netCon);
 
+        bool isForeignSend = !GetScope(netCon).CheckAgainst(target);
         if(!_allowForeignSends)
         {
-            if(!GetScope(netCon).CheckAgainst(target))
+            if(isForeignSend)
             {
                 Debug.LogWarning("Received a foreign send, discarding.");
                 return;
             }
         }
-        // @TODO make a function to get the styler data out of there.
-        SendChatMessageToScope(message, new DefaultStyle.DefaultStylerData(true, netCon.Id), target);
+        SendChatMessageToScope(message, _senderStyle.GenerateData(netCon.Id, target, GetScope(netCon), isForeignSend), target);
     }
 
     private void OnServerReceiveChatMessage(string message, uint NetConnectionID, NetickConnection sender)

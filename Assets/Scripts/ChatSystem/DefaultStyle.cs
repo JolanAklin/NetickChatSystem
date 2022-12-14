@@ -10,25 +10,29 @@ public class DefaultStyle : SenderStyler
     [SerializeField] private Color _otherClient = new Color(1,.57f,0);
     [SerializeField] private Color _serverColor = Color.red;
 
-    public class DefaultStylerData : StylerData
+    // If you want more data than what is available by default, this is where you'll get more.
+    #region generate styler data
+    public override StylerData GenerateData()
     {
-        public bool _isClient {get; private set;}
-        public int? _clientId { get; private set; }
-
-        public DefaultStylerData(bool isClient, int? clientId = null)
-        {
-            _isClient = isClient;
-            _clientId = clientId;
-        }
+        return new StylerData();
     }
+
+    public override StylerData GenerateData(ScopeManager.Scope target)
+    {
+        return new StylerData(target);
+    }
+
+    public override StylerData GenerateData(int clientId, ScopeManager.Scope target, ScopeManager.Scope sender, bool foreignSend)
+    {
+        return new StylerData(clientId, target, sender, foreignSend);
+    }
+    #endregion
 
     public override string GetSenderStyle(StylerData data)
     {
-        DefaultStylerData dsd = (DefaultStylerData)data;
-        if(dsd._isClient)
+        if(data._isClient)
         {
-            
-            return $"<color=#{(dsd._clientId == 0 ? ColorUtility.ToHtmlStringRGB(_client0) : ColorUtility.ToHtmlStringRGB(_otherClient))}>[CLIENT {dsd._clientId}]</color> ";
+            return $"|{data._target.name.ToUpper()}| <color=#{(data._clientId == 0 ? ColorUtility.ToHtmlStringRGB(_client0) : ColorUtility.ToHtmlStringRGB(_otherClient))}>[CLIENT {data._clientId}]</color> ";
         }
         else
         {
