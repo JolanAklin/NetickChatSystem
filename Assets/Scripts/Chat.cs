@@ -7,6 +7,7 @@ using TMPro;
 public class Chat : MonoBehaviour
 {
     private ChatMessenger _messenger;
+    private ScopeManager _scopeManager;
 
     public NetworkSandbox _sandbox;
 
@@ -15,12 +16,13 @@ public class Chat : MonoBehaviour
     private void Start()
     {
         _messenger = _sandbox.FindGameObjectWithTag("NetController").GetComponent<ChatMessenger>();
+        _scopeManager = _messenger.GetComponent<ScopeManager>();
         _messenger.OnClientReceiveChatMessage += OnMessageReceived;
     }
 
     public void SendMessage(TMP_InputField message)
     {
-        _messenger.SendToServer(message.text, ScopeManager.Scope.Everyone);
+        _messenger.SendToServer(message.text, _scopeManager.GetScope("Red team"));
         message.text = "";
     }
 

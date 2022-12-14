@@ -70,6 +70,11 @@ public class ScopeManager : MonoBehaviour
 
     public void RegisterScope(string name)
     {
+        if(_scopeNumber >= 31)
+        {
+            Debug.LogError("You reached the maximal amount of scopes. You migth want to use extended scope for some functionnality");
+            return;
+        }
         AddScope(new Scope(((uint)1) << _scopeNumber, name, false));
         _scopeNumber++;
     }
@@ -77,24 +82,41 @@ public class ScopeManager : MonoBehaviour
     public void RegisterExtendedScope(string name, Scope[] scopes)
     {
         Scope scope = new Scope(name, scopes, false);
-        if(_scopes.TryGetValue(scope.scope, out Scope foundScope))
-        {
-            Debug.LogError($"The scope ({name}) you are trying to defind already exists ({foundScope.name}.)");
-        }
         AddScope(scope);
     }
 
-    private void AddScope(Scope scope)
+    private bool AddScope(Scope scope)
     {
+        if(_scopesName.ContainsKey(scope.name))
+        {
+            Debug.LogError($"A scope with the name {scope.name} already exists");
+            return false;
+        }
+        if (_scopes.TryGetValue(scope.scope, out Scope foundScope))
+        {
+            Debug.LogError($"The scope ({name}) you are trying to define already exists ({foundScope.name}).");
+            return false;
+        }
         _scopes.Add(scope.scope, scope);
         _scopesName.Add(scope.name, scope);
+        return true;
     }
 
     public Scope GetScope(string name)
     {
         if (!_scopesName.TryGetValue(name, out Scope foundScope))
         {
-            Debug.LogError($"The scope ({name}) you are trying to defind already exists ({foundScope.name}.)");
+            Debug.LogError($"The scope ({name}) does not exist.");
+            return null;
+        }
+        return foundScope;
+    }
+
+    public Scope GetScope(uint value)
+    {
+        if (!_scopes.TryGetValue(value, out Scope foundScope))
+        {
+            Debug.LogError($"The scope ({value}) does not exist.");
             return null;
         }
         return foundScope;

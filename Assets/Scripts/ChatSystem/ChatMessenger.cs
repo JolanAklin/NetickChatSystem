@@ -20,6 +20,8 @@ public class ChatMessenger : MonoBehaviour
     private Dictionary<NetworkConnection, ScopeManager.Scope> _connectionsScope = new Dictionary<NetworkConnection, ScopeManager.Scope>();
 
     [SerializeField] private SenderStyler _senderStyle;
+    [Tooltip("If true, client are allowed to send message in any scopes, disregarding theirs.")]
+    [SerializeField] private bool _allowForeignSends = false;
 
     public event System.EventHandler<OnClientReceiveChatMessageEventArgs> OnClientReceiveChatMessage;
 
@@ -77,26 +79,76 @@ public class ChatMessenger : MonoBehaviour
     {
         NetDataReader reader = new NetDataReader(e.message);
         bool fromServer = reader.GetBool();
-        string message = reader.GetString();
         // when the client and the server run on the same machine, both receive server and client messages.
         // this is for separating them
         if(fromServer && _sandbox.IsClient)
+        {
+            string message = ReadMessageFromServer(reader);
             OnClientReceiveChatMessage?.Invoke(this, new OnClientReceiveChatMessageEventArgs(message));
+        }
         if(!fromServer && _sandbox.IsServer)
-            OnServerReceiveChatMessage(message, e.connection);
+        {
+            string message = ReadMessageFromClient(reader, out bool isScopeTarget, out uint value);
+            if(isScopeTarget) // client is targeting a scope
+            {
+                ScopeManager.Scope targetScope = _scopeManager.GetScope(value);
+                if(targetScope == null)
+                    return;
+                OnServerReceiveChatMessage(message, targetScope, e.connection);
+            }
+            else // client is target another client
+                OnServerReceiveChatMessage(message, value, e.connection);
+        }
     }
 
-    // client have to send theyre message to the server and the server then dispatches them to the right clients
-    private void OnServerReceiveChatMessage(string message, NetickConnection connection)
+    #region readers
+    // only the client will specify a target in his messages
+    private string ReadMessageFromClient(NetDataReader reader, out bool isScopeTarget, out uint value)
     {
-        if(!_connectionManager.GetNetConByNetickConnection(connection, out NetworkConnection netConn))
+        isScopeTarget = reader.GetBool();
+        value = reader.GetUInt();
+        return reader.GetString();
+    }
+
+    private string ReadMessageFromServer(NetDataReader reader)
+    {
+        return reader.GetString();
+    }
+    #endregion
+
+    // Clients have to send their message to the server and the server then dispatches them to the right clients
+    // sender is the client that sent the message to the server
+    private void OnServerReceiveChatMessage(string message, ScopeManager.Scope target, NetickConnection sender)
+    {
+        if(!_connectionManager.GetNetConByNetickConnection(sender, out NetworkConnection netConn))
         {
             Debug.LogError("NetworkConnection not found");
             return;
         }
-        _connectionManager.GetNetConByNetickConnection(connection, out NetworkConnection netCon);
-        SendChatMessageToScope(message, new DefaultStyle.DefaultStylerData(true, netCon.Id), ScopeManager.Scope.Everyone);
-        Debug.Log($"[FROM CLIENT] {message} {_sandbox.name}");
+        _connectionManager.GetNetConByNetickConnection(sender, out NetworkConnection netCon);
+
+        if(!_allowForeignSends)
+        {
+            if(!GetScope(netCon).CheckAgainst(target))
+            {
+                Debug.LogWarning("Received a foreign send, discarding.");
+                return;
+            }
+        }
+        // @TODO make a function to get the styler data out of there.
+        SendChatMessageToScope(message, new DefaultStyle.DefaultStylerData(true, netCon.Id), target);
+    }
+
+    private void OnServerReceiveChatMessage(string message, uint NetConnectionID, NetickConnection sender)
+    {
+        if (!_connectionManager.GetNetConByNetickConnection(sender, out NetworkConnection netConn))
+        {
+            Debug.LogError("NetworkConnection not found");
+            return;
+        }
+        _connectionManager.GetNetConByNetickConnection(sender, out NetworkConnection netCon);
+        // @TODO send message to only on client
+        Debug.LogWarning("this is not working at the moment");
     }
 
     ///<summary>
@@ -124,7 +176,7 @@ public class ChatMessenger : MonoBehaviour
         }
         foreach (NetworkConnection client in _connectionManager.GetConnections())
         {
-            if(_connectionsScope[client].CheckAgainst(_scopeManager.GetScope("Red team")))
+            if(_connectionsScope[client].CheckAgainst(scope))
                 SendChatMessage(message, client, data);
         }
     }
@@ -141,7 +193,7 @@ public class ChatMessenger : MonoBehaviour
     ///<summary>
     /// Send a message to the server to dispatch to other client with the given scope
     ///</summary>
-    public void SendToServer(string message, ScopeManager.Scope scope)
+    public void SendToServer(string message, ScopeManager.Scope target)
     {
         if(_sandbox.IsServer)
         {
@@ -150,6 +202,8 @@ public class ChatMessenger : MonoBehaviour
         }
         _writer.Reset();
         _writer.Put(false); // false = sent by a client
+        _writer.Put(true); // if true, the next int will be a scope. If false the next int will be a NetworkConnection ID.
+        _writer.Put(target.scope);
         _writer.Put(message);
         ChatLiteNetTransport.LNLConnection connection = (ChatLiteNetTransport.LNLConnection)_connectionManager.ServerConnection.TransportConnection;
         connection.ChatSend(_writer.Data, _writer.Data.Length);
