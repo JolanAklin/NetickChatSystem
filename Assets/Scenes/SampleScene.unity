@@ -445,8 +445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a0d31af874484ad69746467b24fd641, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _chatUIPrefab: {fileID: 2640707111926377500, guid: 6b183a0f337a19e4baec98bf67f76ab2,
-    type: 3}
+  _client: {fileID: 877621167958917338, guid: a99f475a998596e5cb803b1eae31fc15, type: 3}
 --- !u!114 &1154803337
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -16,7 +16,13 @@ MonoBehaviour:
   Assemblies:
   - Assembly-CSharp.dll
   WeaverErrors: []
-  _Prefabs: []
+  _Prefabs:
+  - Obj: {fileID: 4102401368432441176, guid: a99f475a998596e5cb803b1eae31fc15, type: 3}
+    InstanceId: 32538
+    Name: client
+    FileName: Assets/Prefabs/client.prefab
+    GO: {fileID: 877621167958917338, guid: a99f475a998596e5cb803b1eae31fc15, type: 3}
+    Id: 0
   TickRate: 33.333336
   MaxPlayers: 16
   MaxObjects: 512

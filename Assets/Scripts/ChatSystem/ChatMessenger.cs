@@ -122,6 +122,7 @@ public class ChatMessenger : MonoBehaviour
     // sender is the client that sent the message to the server
     private void OnServerReceiveChatMessage(string message, ScopeManager.Scope target, NetickConnection sender)
     {
+        Debug.Log("server " + target.name);
         if(!_connectionManager.GetNetConByNetickConnection(sender, out NetworkConnection netConn))
         {
             Debug.LogError("NetworkConnection not found");
@@ -197,6 +198,7 @@ public class ChatMessenger : MonoBehaviour
     ///</summary>
     public void SendToServer(string message, ScopeManager.Scope target)
     {
+        Debug.Log("client target " + target.name);
         if(_sandbox.IsServer)
         {
             Debug.LogWarning("Message not sent. You are calling this function from the server. It should only be called on the client.");

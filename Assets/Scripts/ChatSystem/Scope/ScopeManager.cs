@@ -23,11 +23,13 @@ public class ScopeManager : MonoBehaviour
         public Scope(string name, Scope[] scopes, bool editable = true)
         {
             this.editable = editable;
+            this.name = name;
             uint newScope = scopes[0].scope;
             for (int i = 1; i < scopes.Length; i++)
             {
                 newScope |= scopes[i].scope;
             }
+            this.scope = newScope;
         }
 
         public Scope(Scope from)
@@ -57,6 +59,16 @@ public class ScopeManager : MonoBehaviour
             this.scope = ((((~remove.scope) | this.scope) & remove.scope) ^ scope);
         }
 
+        public void Clear()
+        {
+            if (!editable)
+            {
+                Debug.LogError("This scope cannot be edited");
+                return;
+            }
+            this.scope = 0;
+        }
+
         public bool CheckAgainst(Scope against)
         {
             return (this.scope & against.scope) == against.scope;
@@ -67,6 +79,10 @@ public class ScopeManager : MonoBehaviour
     private Dictionary<string, Scope> _scopesName = new Dictionary<string, Scope>();
 
     private ushort _scopeNumber = 0;
+
+    private void Awake() {
+        AddScope(Scope.Everyone);
+    }
 
     public void RegisterScope(string name)
     {
@@ -94,7 +110,7 @@ public class ScopeManager : MonoBehaviour
         }
         if (_scopes.TryGetValue(scope.scope, out Scope foundScope))
         {
-            Debug.LogError($"The scope ({name}) you are trying to define already exists ({foundScope.name}).");
+            Debug.LogError($"The scope ({scope.name}) you are trying to define already exists ({foundScope.name}).");
             return false;
         }
         _scopes.Add(scope.scope, scope);
