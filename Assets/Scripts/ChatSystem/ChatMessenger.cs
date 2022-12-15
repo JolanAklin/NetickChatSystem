@@ -22,7 +22,14 @@ public class ChatMessenger : MonoBehaviour
     [SerializeField] private SenderStyler _senderStyle;
     public static SenderStyler Styler {get; private set;}
     [Tooltip("If true, client are allowed to send message in any scopes, disregarding theirs.")]
-    [SerializeField] private bool _allowForeignSends = false;
+    [SerializeField] private ForeignSendsPolicy _foreignSendsGlobalPolicy = ForeignSendsPolicy.definedByScope;
+
+    public enum ForeignSendsPolicy
+    {
+        forceOff,
+        definedByScope,
+        forceOn
+    }
 
     public event System.EventHandler<OnClientReceiveChatMessageEventArgs> OnClientReceiveChatMessage;
 
@@ -130,14 +137,32 @@ public class ChatMessenger : MonoBehaviour
         }
         _connectionManager.GetNetConByNetickConnection(sender, out NetworkConnection netCon);
 
+
         bool isForeignSend = !GetScope(netCon).CheckAgainst(target);
-        if(!_allowForeignSends)
+        switch (_foreignSendsGlobalPolicy)
         {
-            if(isForeignSend)
-            {
-                Debug.LogWarning("Received a foreign send, discarding.");
-                return;
-            }
+            case ForeignSendsPolicy.forceOff:
+                if (isForeignSend)
+                {
+                    Debug.LogWarning($"The global foreign send policy is set to : {_foreignSendsGlobalPolicy}. The received message will be discarded.");
+                    return;
+                }
+                break;
+            case ForeignSendsPolicy.definedByScope:
+                if (isForeignSend)
+                {
+                    switch (target.foreignReceivePolicy)
+                    {
+                        case ScopeManager.Scope.ForeignReceivePolicy.forbidden:
+                            Debug.LogWarning($"The scope foreign receive policy is set to {target.foreignReceivePolicy}. The message will be discarded.");
+                            return;
+                        case ScopeManager.Scope.ForeignReceivePolicy.authorized:
+                            break;
+                    }
+                }
+                break;
+            case ForeignSendsPolicy.forceOn:
+                break;
         }
         SendChatMessageToScope(message, _senderStyle.GenerateData(netCon.Id, target, GetScope(netCon), isForeignSend), target);
     }

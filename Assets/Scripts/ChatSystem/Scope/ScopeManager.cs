@@ -11,19 +11,42 @@ public class ScopeManager : MonoBehaviour
 
         public bool editable {get; private set;}
 
-        public static Scope Everyone {get => new Scope(0, "Everyone");}
+        // When checking with extended scope.
+        // strict will only match the full extended scope
+        // loose will match every part of the extended scope.
+        public enum CheckPolicy
+        {
+            strict,
+            loose
+        }
 
-        public Scope(uint scope, string name, bool editable = true)
+        public CheckPolicy checkPolicy {get; private set;}
+
+        public enum ForeignReceivePolicy
+        {
+            forbidden,
+            authorized,
+        }
+
+        public ForeignReceivePolicy foreignReceivePolicy {get; private set;}
+
+        public static Scope Everyone {get => new Scope(0, "Everyone", true, ForeignReceivePolicy.authorized);}
+
+        public Scope(uint scope, string name, bool editable = true, ForeignReceivePolicy foreignReceivePolicy = ForeignReceivePolicy.forbidden)
         {
             this.editable = editable;
             this.scope = scope;
             this.name = name;
+            this.checkPolicy = checkPolicy;
+            this.foreignReceivePolicy = foreignReceivePolicy;
         }
 
-        public Scope(string name, Scope[] scopes, bool editable = true)
+        public Scope(string name, Scope[] scopes, bool editable = true, CheckPolicy checkPolicy = CheckPolicy.strict, ForeignReceivePolicy foreignReceivePolicy = ForeignReceivePolicy.forbidden)
         {
             this.editable = editable;
             this.name = name;
+            this.foreignReceivePolicy = foreignReceivePolicy;
+            this.checkPolicy = checkPolicy;
             uint newScope = scopes[0].scope;
             for (int i = 1; i < scopes.Length; i++)
             {
@@ -37,6 +60,8 @@ public class ScopeManager : MonoBehaviour
             this.editable = from.editable;
             this.scope = from.scope;
             this.name = from.name;
+            this.checkPolicy = from.checkPolicy;
+            this.foreignReceivePolicy = from.foreignReceivePolicy;
         }
 
         public void AddScope(Scope add)
@@ -71,7 +96,15 @@ public class ScopeManager : MonoBehaviour
 
         public bool CheckAgainst(Scope against)
         {
-            return (this.scope & against.scope) == against.scope;
+            switch (against.checkPolicy)
+            {
+                case CheckPolicy.strict:
+                    return (this.scope & against.scope) == against.scope;
+                case CheckPolicy.loose:
+                    return (this.scope & against.scope) > 0;
+                default:
+                    return false;
+            }
         }
     }
 
@@ -84,20 +117,20 @@ public class ScopeManager : MonoBehaviour
         AddScope(Scope.Everyone);
     }
 
-    public void RegisterScope(string name)
+    public void RegisterScope(string name, Scope.ForeignReceivePolicy foreignReceivePolicy = Scope.ForeignReceivePolicy.forbidden)
     {
         if(_scopeNumber >= 31)
         {
             Debug.LogError("You reached the maximal amount of scopes. You migth want to use extended scope for some functionnality");
             return;
         }
-        AddScope(new Scope(((uint)1) << _scopeNumber, name, false));
+        AddScope(new Scope(((uint)1) << _scopeNumber, name, false, foreignReceivePolicy));
         _scopeNumber++;
     }
 
-    public void RegisterExtendedScope(string name, Scope[] scopes)
+    public void RegisterExtendedScope(string name, Scope[] scopes, Scope.CheckPolicy checkPolicy, Scope.ForeignReceivePolicy foreignReceivePolicy)
     {
-        Scope scope = new Scope(name, scopes, false);
+        Scope scope = new Scope(name, scopes, false, checkPolicy, foreignReceivePolicy);
         AddScope(scope);
     }
 

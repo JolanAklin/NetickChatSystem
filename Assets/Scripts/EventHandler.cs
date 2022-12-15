@@ -17,7 +17,7 @@ public class EventHandler : ChatNetworkEventsListner
 
         _scopeManager.RegisterScope("Red team");
         _scopeManager.RegisterScope("Blue team");
-        _scopeManager.RegisterExtendedScope("Teams", new ScopeManager.Scope[] {_scopeManager.GetScope("Red team"), _scopeManager.GetScope("Blue team")});
+        _scopeManager.RegisterExtendedScope("Teams", new ScopeManager.Scope[] {_scopeManager.GetScope("Red team"), _scopeManager.GetScope("Blue team")}, ScopeManager.Scope.CheckPolicy.loose, ScopeManager.Scope.ForeignReceivePolicy.forbidden);
     }
 
     public override void OnClientConnected(NetworkSandbox sandbox, NetworkConnection client)
