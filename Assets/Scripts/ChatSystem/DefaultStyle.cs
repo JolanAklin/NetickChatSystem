@@ -6,9 +6,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "DefaultStyler", menuName = "ChatSystem/DefaultStyler", order = 0)]
 public class DefaultStyle : SenderStyler
 {
-    [SerializeField] private Color _client0 = Color.green;
-    [SerializeField] private Color _otherClient = new Color(1,.57f,0);
-    [SerializeField] private Color _serverColor = Color.red;
+    [SerializeField] private Color _redTeamColor = Color.red;
+    [SerializeField] private Color _blueTeamColor = Color.blue;
+    [SerializeField] private Color _teamsColor = Color.cyan;
+    [SerializeField] private Color _everyoneColor = Color.gray;
+    [SerializeField] private Color _serverColor = Color.magenta;
 
     // If you want more data than what is available by default, this is where you'll get more.
     #region generate styler data
@@ -32,7 +34,23 @@ public class DefaultStyle : SenderStyler
     {
         if(data._isClient)
         {
-            return $"|{data._target.name.ToUpper()}| <color=#{(data._clientId == 0 ? ColorUtility.ToHtmlStringRGB(_client0) : ColorUtility.ToHtmlStringRGB(_otherClient))}>[CLIENT {data._clientId}]</color> ";
+            Color color = Color.black;
+            switch (data._sender.name)
+            {
+                case "Everyone":
+                    color = _everyoneColor;
+                    break;
+                case "Blue team":
+                    color = _blueTeamColor;
+                    break;
+                case "Red team":
+                    color = _redTeamColor;
+                    break;
+                case "Teams":
+                    color = _teamsColor;
+                    break;
+            }
+            return $"|{data._target.name.ToUpper()}| <color=#{ColorUtility.ToHtmlStringRGB(color)}>[CLIENT {data._clientId}]</color> ";
         }
         else
         {

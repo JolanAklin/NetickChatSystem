@@ -35,16 +35,20 @@ public class Client : NetworkBehaviour
             return;
         ScopeManager.Scope scope = _messenger.GetScope(Sandbox.RpcSource);
         scope.Clear();
+        scope.ChangeName("Everyone");
         switch (wantedScope)
         {
             case ScopeEnum.RedTeam:
                 scope.AddScope(_manager.GetScope("Red team"));
+                scope.ChangeName("Red team");
                 break;
             case ScopeEnum.BlueTeam:
                 scope.AddScope(_manager.GetScope("Blue team"));
+                scope.ChangeName("Blue team");
                 break;
             case ScopeEnum.BothTeam:
                 scope.AddScope(_manager.GetScope("Teams"));
+                scope.ChangeName("Teams");
                 break;
         }
     }

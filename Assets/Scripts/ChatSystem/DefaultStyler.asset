@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f77fffa01a49a0928be46094430c0fa, type: 3}
   m_Name: DefaultStyler
   m_EditorClassIdentifier: 
-  _client0: {r: 0, g: 0.6415094, b: 0.025058962, a: 1}
-  _otherClient: {r: 1, g: 0.57453704, b: 0, a: 1}
-  _serverColor: {r: 0.7735849, g: 0, b: 0, a: 1}
+  _redTeamColor: {r: 1, g: 0, b: 0, a: 1}
+  _blueTeamColor: {r: 0, g: 0, b: 1, a: 1}
+  _teamsColor: {r: 0, g: 1, b: 1, a: 1}
+  _everyoneColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  _serverColor: {r: 0.7735849, g: 0, b: 0.887, a: 1}

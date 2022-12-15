@@ -61,7 +61,7 @@ public class ChatMessenger : MonoBehaviour
     // register a scope for the new connection
     private void OnNewConnection(object sender, ConnectionsManager.OnNetworkConnectionEventArgs e)
     {
-        _connectionsScope.Add(e.connection, ScopeManager.Scope.Everyone);
+        _connectionsScope.Add(e.connection, new ScopeManager.Scope(0, "", true));
     }
     // remove the connection's scope
     private void OnRemoveConnection(object sender, ConnectionsManager.OnNetworkConnectionEventArgs e)
@@ -74,6 +74,14 @@ public class ChatMessenger : MonoBehaviour
         if(_connectionsScope.TryGetValue(connection, out ScopeManager.Scope scope))
             return scope;
         return null;
+    }
+
+    public void RenamePlayerScope(NetworkConnection connection, string newName)
+    {
+        if (_connectionsScope.TryGetValue(connection, out ScopeManager.Scope scope))
+        {
+            scope.ChangeName(newName);
+        }
     }
 
     public void OnDestroy()

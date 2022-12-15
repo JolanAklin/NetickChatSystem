@@ -30,7 +30,9 @@ public class ScopeManager : MonoBehaviour
 
         public ForeignReceivePolicy foreignReceivePolicy {get; private set;}
 
-        public static Scope Everyone {get => new Scope(0, "Everyone", true, ForeignReceivePolicy.authorized);}
+        private bool isRegistred = true;
+
+        public static Scope Everyone {get => new Scope(0, "Everyone", false, ForeignReceivePolicy.authorized);}
 
         public Scope(uint scope, string name, bool editable = true, ForeignReceivePolicy foreignReceivePolicy = ForeignReceivePolicy.forbidden)
         {
@@ -39,6 +41,17 @@ public class ScopeManager : MonoBehaviour
             this.name = name;
             this.checkPolicy = checkPolicy;
             this.foreignReceivePolicy = foreignReceivePolicy;
+        }
+
+        // this one is called when a new player joins the game
+        public Scope(uint scope, string name, bool editable = true)
+        {
+            this.editable = editable;
+            this.scope = scope;
+            this.name = name;
+            this.checkPolicy = checkPolicy;
+            this.foreignReceivePolicy = foreignReceivePolicy;
+            this.isRegistred = false;
         }
 
         public Scope(string name, Scope[] scopes, bool editable = true, CheckPolicy checkPolicy = CheckPolicy.strict, ForeignReceivePolicy foreignReceivePolicy = ForeignReceivePolicy.forbidden)
@@ -92,6 +105,20 @@ public class ScopeManager : MonoBehaviour
                 return;
             }
             this.scope = 0;
+        }
+
+
+        ///<summary>
+        /// You will only be able to change a scope name if the scope is marked as editable and wasn't registred. The only scope you should change the name of, is a NetworkConnection scope (scope of a player).
+        ///</summary>
+        public void ChangeName(string name)
+        {
+            if (!editable && !isRegistred)
+            {
+                Debug.LogError("This scope cannot be edited");
+                return;
+            }
+            this.name = name;
         }
 
         public bool CheckAgainst(Scope against)
