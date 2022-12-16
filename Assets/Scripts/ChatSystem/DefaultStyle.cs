@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Netick;
 using UnityEngine;
+using NetickChatSystem;
 
 [CreateAssetMenu(fileName = "DefaultStyler", menuName = "ChatSystem/DefaultStyler", order = 0)]
 public class DefaultStyle : SenderStyler
@@ -19,12 +20,12 @@ public class DefaultStyle : SenderStyler
         return new StylerData();
     }
 
-    public override StylerData GenerateData(ScopeManager.Scope target)
+    public override StylerData GenerateData(Scope target)
     {
         return new StylerData(target);
     }
 
-    public override StylerData GenerateData(int clientId, ScopeManager.Scope target, ScopeManager.Scope sender, bool foreignSend)
+    public override StylerData GenerateData(int clientId, Scope target, Scope sender, bool foreignSend)
     {
         return new StylerData(clientId, target, sender, foreignSend);
     }

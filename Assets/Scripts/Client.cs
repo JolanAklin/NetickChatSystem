@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Netick;
 using TMPro;
+using NetickChatSystem;
 
 public class Client : NetworkBehaviour
 {
@@ -17,7 +18,7 @@ public class Client : NetworkBehaviour
     [SerializeField] private GameObject _ui;
     private ChatMessenger _messenger;
     private ScopeManager _manager;
-    private ScopeManager.Scope _targetScope;
+    private Scope _targetScope;
     public NetworkConnection _netConnection;
 
     private GameObject _chat;
@@ -25,7 +26,7 @@ public class Client : NetworkBehaviour
     {
         _messenger = Sandbox.FindGameObjectWithTag("NetController").GetComponent<ChatMessenger>();
         _manager = _messenger.GetComponent<ScopeManager>();
-        _targetScope = ScopeManager.Scope.Everyone;
+        _targetScope = Scope.Everyone;
         if(IsClient && IsInputSource && !IsOwner)
         {
             _chat = Sandbox.FindGameObjectWithTag("Chat");
@@ -53,7 +54,7 @@ public class Client : NetworkBehaviour
     {
         if(!IsOwner)
             return;
-        ScopeManager.Scope scope = _messenger.GetScope(Sandbox.RpcSource);
+        Scope scope = _messenger.GetScope(Sandbox.RpcSource);
         scope.Clear();
         scope.ChangeName("Everyone");
         switch (wantedScope)
@@ -78,7 +79,7 @@ public class Client : NetworkBehaviour
         switch (scope)
         {
             case ScopeEnum.Everyone:
-                _targetScope = ScopeManager.Scope.Everyone;
+                _targetScope = Scope.Everyone;
                 break;
             case ScopeEnum.RedTeam:
                 _targetScope = _manager.GetScope("Red team");

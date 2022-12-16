@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Netick;
 using TMPro;
+using NetickChatSystem;
 
 public class Chat : MonoBehaviour
 {

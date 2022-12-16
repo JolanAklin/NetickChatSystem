@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Netick;
-using Netick.Transport;
+using NetickChatSystem;
 
 public class EventHandler : ChatNetworkEventsListner
 {
@@ -18,7 +18,7 @@ public class EventHandler : ChatNetworkEventsListner
 
         _scopeManager.RegisterScope("Red team");
         _scopeManager.RegisterScope("Blue team");
-        _scopeManager.RegisterExtendedScope("Teams", new ScopeManager.Scope[] {_scopeManager.GetScope("Red team"), _scopeManager.GetScope("Blue team")}, ScopeManager.Scope.CheckPolicy.loose, ScopeManager.Scope.ForeignReceivePolicy.forbidden);
+        _scopeManager.RegisterExtendedScope("Teams", new Scope[] {_scopeManager.GetScope("Red team"), _scopeManager.GetScope("Blue team")}, Scope.CheckPolicy.loose, Scope.ForeignReceivePolicy.forbidden);
     }
 
     public override void OnClientConnected(NetworkSandbox sandbox, NetworkConnection client)
@@ -30,13 +30,13 @@ public class EventHandler : ChatNetworkEventsListner
         obj.GetComponent<Client>()._netConnection = client;
 
         _chat.SendChatMessageToOne($"Welcome to the server Client {client.Id}", client);
-        _chat.SendChatMessageToScope($"Client {client.Id} connected", ScopeManager.Scope.Everyone);
+        _chat.SendChatMessageToScope($"Client {client.Id} connected", Scope.Everyone);
     }
 
     public override void OnClientDisconnected(NetworkSandbox sandbox, NetworkConnection client)
     {
         base.OnClientDisconnected(sandbox, client);
-        _chat.SendChatMessageToScope($"Client {client.Id} disconnected", ScopeManager.Scope.Everyone);
+        _chat.SendChatMessageToScope($"Client {client.Id} disconnected", Scope.Everyone);
     }
 
     public override void OnConnectedToServer(NetworkSandbox sandbox, NetworkConnection server)
