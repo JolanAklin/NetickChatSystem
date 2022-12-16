@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - NetController
+  - Chat
   layers:
   - Default
   - TransparentFX

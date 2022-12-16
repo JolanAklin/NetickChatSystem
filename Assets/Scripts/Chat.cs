@@ -11,7 +11,7 @@ public class Chat : MonoBehaviour
 
     public NetworkSandbox _sandbox;
 
-    private Client _client;
+    public Client _client;
 
     [SerializeField] private TMP_Text _messages;
 
@@ -22,6 +22,11 @@ public class Chat : MonoBehaviour
         _messenger.OnClientReceiveChatMessage += OnMessageReceived;
 
         _client = GetComponentInParent<Client>();
+    }
+
+    private void OnDestroy()
+    {
+        _messenger.OnClientReceiveChatMessage -= OnMessageReceived;
     }
 
     public void SendMessage(TMP_InputField message)

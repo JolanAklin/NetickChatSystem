@@ -61,11 +61,15 @@ public class ChatMessenger : MonoBehaviour
     // register a scope for the new connection
     private void OnNewConnection(object sender, ConnectionsManager.OnNetworkConnectionEventArgs e)
     {
+        Debug.Log(e.connection.Id);
+        if(_connectionsScope.ContainsKey(e.connection))
+            Debug.Log("already has this connection");
         _connectionsScope.Add(e.connection, new ScopeManager.Scope(0, "", true));
     }
     // remove the connection's scope
     private void OnRemoveConnection(object sender, ConnectionsManager.OnNetworkConnectionEventArgs e)
     {
+        Debug.Log(e.connection.Id);
         _connectionsScope.Remove(e.connection);
     }
 
@@ -87,8 +91,11 @@ public class ChatMessenger : MonoBehaviour
     public void OnDestroy()
     {
         ChatLiteNetTransport._onChatReceive -= OnChatMessageReceivedHandler;
-        _connectionManager.OnNetworkConnectionAdded -= OnNewConnection;
-        _connectionManager.OnNetworkConnectionRemoved -= OnRemoveConnection;
+        if(_connectionManager != null)
+        {
+            _connectionManager.OnNetworkConnectionAdded -= OnNewConnection;
+            _connectionManager.OnNetworkConnectionRemoved -= OnRemoveConnection;
+        }
     }
 
     // called when receiving a chat message
@@ -190,20 +197,20 @@ public class ChatMessenger : MonoBehaviour
     ///<summary>
     /// Send a message to a particular client. Server only
     ///</summary>
-    public void SendChatMessageToOne(string message, NetworkConnection client, SenderStyler.StylerData data)
+    public void SendChatMessageToOne(string message, NetworkConnection client)
     {
         if (_sandbox.IsClient)
         {
             Debug.LogWarning("Message not sent. You are calling this function from the client. It should only be called on the server.");
             return;
         }
-        SendChatMessage(message, client, data);
+        SendChatMessage(message, client, _senderStyle.GenerateData());
     }
 
     ///<summary>
     /// Send a message to all the client that match the given scope. Server only.
     ///</summary>
-    public void SendChatMessageToScope(string message, SenderStyler.StylerData data, ScopeManager.Scope scope)
+    private void SendChatMessageToScope(string message, SenderStyler.StylerData data, ScopeManager.Scope scope)
     {
         if (_sandbox.IsClient)
         {
@@ -215,6 +222,14 @@ public class ChatMessenger : MonoBehaviour
             if(_connectionsScope[client].CheckAgainst(scope))
                 SendChatMessage(message, client, data);
         }
+    }
+
+    ///<summary>
+    /// Send a message to all the client that match the given scope. Server only.
+    ///</summary>
+    public void SendChatMessageToScope(string message, ScopeManager.Scope target)
+    {
+        SendChatMessageToScope(message, _senderStyle.GenerateData(target), target);
     }
 
     private void SendChatMessage(string message, NetworkConnection client, SenderStyler.StylerData data)

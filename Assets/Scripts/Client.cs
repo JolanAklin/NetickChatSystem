@@ -19,13 +19,33 @@ public class Client : NetworkBehaviour
     private ScopeManager _manager;
     private ScopeManager.Scope _targetScope;
     public NetworkConnection _netConnection;
+
+    private GameObject _chat;
     public override void NetworkStart()
     {
         _messenger = Sandbox.FindGameObjectWithTag("NetController").GetComponent<ChatMessenger>();
         _manager = _messenger.GetComponent<ScopeManager>();
         _targetScope = ScopeManager.Scope.Everyone;
         if(IsClient && IsInputSource && !IsOwner)
-            Instantiate(_ui, Vector3.zero, Quaternion.identity, transform).GetComponent<Chat>()._sandbox = Sandbox;
+        {
+            _chat = Sandbox.FindGameObjectWithTag("Chat");
+            _chat.GetComponent<Chat>()._client = this;
+        }
+    }
+
+    public override void OnInputSourceLeft()
+    {
+        Sandbox.Destroy(this.Object);
+    }
+
+    public override void NetworkDestroy()
+    {
+        Destroy(_chat);
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(_chat);
     }
 
     [Rpc(source: RpcPeers.InputSource, target: RpcPeers.Owner, isReliable: true, localInvoke: false)]

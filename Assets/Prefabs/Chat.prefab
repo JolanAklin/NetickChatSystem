@@ -1340,7 +1340,7 @@ GameObject:
   - component: {fileID: 2640707111926377698}
   m_Layer: 0
   m_Name: Chat
-  m_TagString: Untagged
+  m_TagString: Chat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1375,6 +1375,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sandbox: {fileID: 0}
+  _client: {fileID: 0}
   _messages: {fileID: 2640707111765490287}
 --- !u!1 &2640707111949702492
 GameObject:

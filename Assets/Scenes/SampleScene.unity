@@ -432,7 +432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _senderStyle: {fileID: 11400000, guid: b38bf740eda3705f7adad05802031df7, type: 2}
-  _allowForeignSends: 1
+  _foreignSendsGlobalPolicy: 1
 --- !u!114 &1154803336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -446,6 +446,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _client: {fileID: 877621167958917338, guid: a99f475a998596e5cb803b1eae31fc15, type: 3}
+  _ui: {fileID: 2640707111926377500, guid: 6b183a0f337a19e4baec98bf67f76ab2, type: 3}
 --- !u!114 &1154803337
 MonoBehaviour:
   m_ObjectHideFlags: 0

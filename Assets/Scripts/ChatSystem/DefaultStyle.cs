@@ -54,6 +54,10 @@ public class DefaultStyle : SenderStyler
         }
         else
         {
+            if(data._target != null)
+            {
+                return $"|{ data._target.name.ToUpper()}| <color=#{ColorUtility.ToHtmlStringRGB(_serverColor)}>[SERVER] > </color>";
+            }
             return $"<color=#{ColorUtility.ToHtmlStringRGB(_serverColor)}>[SERVER] > </color>";
         }
     }
