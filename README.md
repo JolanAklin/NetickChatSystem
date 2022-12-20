@@ -34,10 +34,31 @@ From the server :
 ChatMessenger.SendChatMessageToOne(string message, NetworkConnection client)
 ChatMessenger.SendChatMessageToScope(string message, Scope target)
 ```
+eg:
+```
+[...]
+  _chat = GetComponent<ChatMessenger>();
+[...]
+public override void OnClientConnected(NetworkSandbox sandbox, NetworkConnection client)
+{
+  _chat.SendChatMessageToOne($"Welcome to the server Client {client.Id}", client);
+  _chat.SendChatMessageToScope($"Client {client.Id} connected", Scope.Everyone);
+}
+```
 From the client :
 ```
 ChatMessenger.SendToServer(string message, Scope target)
+ChatMessenger.SendToServer(string message, int targetClient)
 ```
+eg:
+```
+[...]
+_messenger = Sandbox.FindGameObjectWithTag("NetController").GetComponent<ChatMessenger>();
+[...]
+_messenger.SendToServer(message, ScopeManager.Instance.GetScope("Blue team"));
+```
+For more examples, see the demo. Script of interest are EventHandler.cs, Client.cs, Chat.cs.
+
 ### Custom chat styling
 To customize chat looks, you can create a new scripts that inherit from SenderStyler. See DefaultStyle.cs for implementation.
 ## License
