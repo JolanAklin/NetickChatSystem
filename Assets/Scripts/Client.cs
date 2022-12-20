@@ -94,6 +94,10 @@ public class Client : NetworkBehaviour
     public void SendChatMessage(string message)
     {
         _messenger.SendToServer(message, _targetScope);
-        message = "";
+    }
+
+    public void SendChatMessage(string message, int toClient)
+    {
+        _messenger.SendToServer(message, toClient);
     }
 }

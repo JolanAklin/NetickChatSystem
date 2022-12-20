@@ -25,16 +25,23 @@ namespace NetickChatSystem
         public class StylerData
         {
             public bool _isClient { get; private set; }
+            
+            public bool _isScopeSend {get; private set;}
 
             ///<summary>
             ///Will be null if _isClient is false.
             ///</sumamry>
-            public int? _clientId { get; private set; }
+            public int? _senderId { get; private set; }
 
             ///<summary>
             /// The scope the message has been sent to. Will be null if _isClient is false.
             ///</summary>
             public Scope _target {get; private set;}
+
+            ///<summary>
+            /// The client the message has been sent to. Will be null if _isScopeSend is true.
+            ///</summary>
+            public int? _clientTarget { get; private set; }
 
             ///<summary>
             /// The scope of the sender
@@ -46,13 +53,25 @@ namespace NetickChatSystem
             ///</summary>
             public bool? _isForeignSend {get; private set;}
 
-            public StylerData(int clientId, Scope target, Scope sender, bool foreignSend)
+            public StylerData(int senderId, Scope target, Scope sender, bool foreignSend)
             {
                 _isClient = true;
-                _clientId = clientId;
+                _senderId = senderId;
                 _target = target;
                 _sender = sender;
                 _isForeignSend = foreignSend;
+                _isScopeSend = true;
+                _clientTarget = null;
+            }
+
+            public StylerData(int senderId, int targetClientId, Scope sender)
+            {
+                _isClient = true;
+                _senderId = senderId;
+                _clientTarget = targetClientId;
+                _sender = sender;
+                _isForeignSend = false;
+                _isScopeSend = false;
             }
 
             ///<summary>
@@ -61,10 +80,12 @@ namespace NetickChatSystem
             public StylerData(Scope target)
             {
                 _isClient = false;
-                _clientId = null;
+                _senderId = null;
                 _target = target;
                 _sender = null;
                 _isForeignSend = null;
+                _isScopeSend = true;
+                _clientTarget = null;
             }
             ///<summary>
             /// When sent by the server. _isClient is set to false
@@ -72,16 +93,19 @@ namespace NetickChatSystem
             public StylerData()
             {
                 _isClient = false;
-                _clientId = null;
+                _senderId = null;
                 _target = null;
                 _sender = null;
                 _isForeignSend = null;
+                _isScopeSend = false;
+                _clientTarget = null;
             }
         }
         public abstract string GetSenderStyle(StylerData data);
         
         public abstract StylerData GenerateData();
         public abstract StylerData GenerateData(Scope target);
-        public abstract StylerData GenerateData(int clientId, Scope target, Scope sender, bool foreignSend);
+        public abstract StylerData GenerateData(int senderId, Scope target, Scope sender, bool foreignSend);
+        public abstract StylerData GenerateData(int senderId, int clientTarget, Scope sender);
     }
 }
