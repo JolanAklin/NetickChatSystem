@@ -24,7 +24,6 @@ namespace NetickChatSystem
 {
     [RequireComponent(typeof(ChatNetworkEventsListner))]
     [RequireComponent(typeof(ConnectionsManager))]
-    [RequireComponent(typeof(ScopeManager))]
     public class ChatMessenger : MonoBehaviour
     {
         public bool isInitialized {get; private set;}
@@ -32,7 +31,6 @@ namespace NetickChatSystem
         private ChatNetworkEventsListner _listener;
         private NetDataWriter _writer = new NetDataWriter();
         private ConnectionsManager _connectionManager;
-        private ScopeManager _scopeManager;
 
         private Dictionary<NetworkConnection, Scope> _connectionsScope = new Dictionary<NetworkConnection, Scope>();
 
@@ -65,7 +63,6 @@ namespace NetickChatSystem
             _sandbox = sandbox;
             _listener = listner;
             _connectionManager = GetComponent<ConnectionsManager>();
-            _scopeManager = GetComponent<ScopeManager>();
             ChatLiteNetTransport._onChatReceive += OnChatMessageReceivedHandler;
             Styler = _senderStyle;
 
@@ -128,7 +125,7 @@ namespace NetickChatSystem
                 string message = ReadMessageFromClient(reader, out bool isScopeTarget, out uint value);
                 if(isScopeTarget) // client is targeting a scope
                 {
-                    Scope targetScope = _scopeManager.GetScope(value);
+                    Scope targetScope = ScopeManager.Instance.GetScope(value);
                     if(targetScope == null)
                         return;
                     OnServerReceiveChatMessage(message, targetScope, e.connection);
