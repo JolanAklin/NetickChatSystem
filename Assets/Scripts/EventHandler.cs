@@ -7,18 +7,21 @@ using NetickChatSystem;
 public class EventHandler : ChatNetworkEventsListner
 {
     private ChatMessenger _chat;
-    private ScopeManager _scopeManager;
     [SerializeField] private GameObject _client;
     [SerializeField] private GameObject _ui;
 
-    private void Awake()
+    private static bool _settedUp = false; // prevent setting the same scope two or more times
+
+    private void Start()
     {
         _chat = GetComponent<ChatMessenger>();
-        _scopeManager = GetComponent<ScopeManager>();
 
-        _scopeManager.RegisterScope("Red team");
-        _scopeManager.RegisterScope("Blue team");
-        _scopeManager.RegisterExtendedScope("Teams", new Scope[] {_scopeManager.GetScope("Red team"), _scopeManager.GetScope("Blue team")}, Scope.CheckPolicy.loose, Scope.ForeignReceivePolicy.forbidden);
+        if(_settedUp)
+            return;
+        ScopeManager.Instance.RegisterScope("Red team");
+        ScopeManager.Instance.RegisterScope("Blue team");
+        ScopeManager.Instance.RegisterExtendedScope("Teams", new string[] {"Red team", "Blue team"}, Scope.CheckPolicy.loose, Scope.ForeignReceivePolicy.forbidden);
+        _settedUp = true;
     }
 
     public override void OnClientConnected(NetworkSandbox sandbox, NetworkConnection client)

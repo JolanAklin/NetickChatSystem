@@ -67,6 +67,20 @@ namespace NetickChatSystem
             this.isRegistred = false;
         }
 
+        public Scope(string name, string[] scopesName, bool editable = true, CheckPolicy checkPolicy = CheckPolicy.strict, ForeignReceivePolicy foreignReceivePolicy = ForeignReceivePolicy.forbidden)
+        {
+            this.editable = editable;
+            this.name = name;
+            this.foreignReceivePolicy = foreignReceivePolicy;
+            this.checkPolicy = checkPolicy;
+            uint newScope = ScopeManager.Instance.GetScope(scopesName[0]).scope;
+            for (int i = 1; i < scopesName.Length; i++)
+            {
+                newScope |= ScopeManager.Instance.GetScope(scopesName[i]).scope;
+            }
+            this.scope = newScope;
+        }
+
         public Scope(string name, Scope[] scopes, bool editable = true, CheckPolicy checkPolicy = CheckPolicy.strict, ForeignReceivePolicy foreignReceivePolicy = ForeignReceivePolicy.forbidden)
         {
             this.editable = editable;
@@ -81,6 +95,17 @@ namespace NetickChatSystem
             this.scope = newScope;
         }
 
+        public Scope(string from)
+        {
+            Scope fromScope = ScopeManager.Instance.GetScope(from);
+
+            this.editable = fromScope.editable;
+            this.scope = fromScope.scope;
+            this.name = fromScope.name;
+            this.checkPolicy = fromScope.checkPolicy;
+            this.foreignReceivePolicy = fromScope.foreignReceivePolicy;
+        }
+
         public Scope(Scope from)
         {
             this.editable = from.editable;
@@ -88,6 +113,11 @@ namespace NetickChatSystem
             this.name = from.name;
             this.checkPolicy = from.checkPolicy;
             this.foreignReceivePolicy = from.foreignReceivePolicy;
+        }
+
+        public void AddScope(string add)
+        {
+            AddScope(ScopeManager.Instance.GetScope(add));
         }
 
         public void AddScope(Scope add)
@@ -98,6 +128,12 @@ namespace NetickChatSystem
                 return;
             }
             this.scope |= add.scope;
+        }
+
+
+        public void RemoveScope(string remove)
+        {
+            RemoveScope(ScopeManager.Instance.GetScope(remove));
         }
 
         public void RemoveScope(Scope remove)
@@ -132,6 +168,11 @@ namespace NetickChatSystem
                 return;
             }
             this.name = name;
+        }
+
+        public bool CheckAgainst(string against)
+        {
+            return CheckAgainst(ScopeManager.Instance.GetScope(against));
         }
 
         public bool CheckAgainst(Scope against)

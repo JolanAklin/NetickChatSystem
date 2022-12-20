@@ -40,41 +40,79 @@ public class DefaultStyle : SenderStyler
         return new StylerData(target);
     }
 
-    public override StylerData GenerateData(int clientId, Scope target, Scope sender, bool foreignSend)
+    public override StylerData GenerateData(int senderId, Scope target, Scope sender, bool foreignSend)
     {
-        return new StylerData(clientId, target, sender, foreignSend);
+        return new StylerData(senderId, target, sender, foreignSend);
+    }
+
+    public override StylerData GenerateData(int senderId, int clientTarget, Scope sender)
+    {
+        return new StylerData(senderId, clientTarget, sender);
     }
     #endregion
 
     public override string GetSenderStyle(StylerData data)
     {
-        if(data._isClient)
+        if(data._isScopeSend)
         {
-            Color color = Color.black;
-            switch (data._sender.name)
+            if (data._isClient)
             {
-                case "Everyone":
-                    color = _everyoneColor;
-                    break;
-                case "Blue team":
-                    color = _blueTeamColor;
-                    break;
-                case "Red team":
-                    color = _redTeamColor;
-                    break;
-                case "Teams":
-                    color = _teamsColor;
-                    break;
+                Color color = Color.black;
+                switch (data._sender.name)
+                {
+                    case "Everyone":
+                        color = _everyoneColor;
+                        break;
+                    case "Blue team":
+                        color = _blueTeamColor;
+                        break;
+                    case "Red team":
+                        color = _redTeamColor;
+                        break;
+                    case "Teams":
+                        color = _teamsColor;
+                        break;
+                }
+                return $"|{data._target.name.ToUpper()}| <color=#{ColorUtility.ToHtmlStringRGB(color)}>[CLIENT {data._senderId}]</color> ";
             }
-            return $"|{data._target.name.ToUpper()}| <color=#{ColorUtility.ToHtmlStringRGB(color)}>[CLIENT {data._clientId}]</color> ";
-        }
-        else
+            else
+            {
+                if (data._target != null)
+                {
+                    return $"|{data._target.name.ToUpper()}| <color=#{ColorUtility.ToHtmlStringRGB(_serverColor)}>[SERVER] > </color>";
+                }
+                return $"<color=#{ColorUtility.ToHtmlStringRGB(_serverColor)}>[SERVER] > </color>";
+            }
+        }else
         {
-            if(data._target != null)
+            if (data._isClient)
             {
-                return $"|{ data._target.name.ToUpper()}| <color=#{ColorUtility.ToHtmlStringRGB(_serverColor)}>[SERVER] > </color>";
+                Color color = Color.black;
+                switch (data._sender.name)
+                {
+                    case "Everyone":
+                        color = _everyoneColor;
+                        break;
+                    case "Blue team":
+                        color = _blueTeamColor;
+                        break;
+                    case "Red team":
+                        color = _redTeamColor;
+                        break;
+                    case "Teams":
+                        color = _teamsColor;
+                        break;
+                }
+                return $"<color=#{ColorUtility.ToHtmlStringRGB(color)}>[CLIENT {data._senderId}]</color> -> You : ";
             }
-            return $"<color=#{ColorUtility.ToHtmlStringRGB(_serverColor)}>[SERVER] > </color>";
+            else
+            {
+                if (data._clientTarget != null)
+                {
+                    return $"<color=#{ColorUtility.ToHtmlStringRGB(_serverColor)}>[SERVER]</color> -> You : ";
+                }
+                return $"<color=#{ColorUtility.ToHtmlStringRGB(_serverColor)}>[SERVER] > </color>";
+            }
         }
     }
 }

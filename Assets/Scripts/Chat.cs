@@ -50,4 +50,9 @@ public class Chat : MonoBehaviour
     {
         _messages.text += "\n" + e.message;
     }
+
+    private void SendToClient()
+    {
+        _client.SendChatMessage("test", 0);
+    }
 }

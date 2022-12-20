@@ -17,7 +17,6 @@ public class Client : NetworkBehaviour
 
     [SerializeField] private GameObject _ui;
     private ChatMessenger _messenger;
-    private ScopeManager _manager;
     private Scope _targetScope;
     public NetworkConnection _netConnection;
 
@@ -25,7 +24,6 @@ public class Client : NetworkBehaviour
     public override void NetworkStart()
     {
         _messenger = Sandbox.FindGameObjectWithTag("NetController").GetComponent<ChatMessenger>();
-        _manager = _messenger.GetComponent<ScopeManager>();
         _targetScope = Scope.Everyone;
         if(IsClient && IsInputSource && !IsOwner)
         {
@@ -60,15 +58,15 @@ public class Client : NetworkBehaviour
         switch (wantedScope)
         {
             case ScopeEnum.RedTeam:
-                scope.AddScope(_manager.GetScope("Red team"));
+                scope.AddScope("Red team");
                 scope.ChangeName("Red team");
                 break;
             case ScopeEnum.BlueTeam:
-                scope.AddScope(_manager.GetScope("Blue team"));
+                scope.AddScope("Blue team");
                 scope.ChangeName("Blue team");
                 break;
             case ScopeEnum.BothTeam:
-                scope.AddScope(_manager.GetScope("Teams"));
+                scope.AddScope("Teams");
                 scope.ChangeName("Teams");
                 break;
         }
@@ -82,13 +80,13 @@ public class Client : NetworkBehaviour
                 _targetScope = Scope.Everyone;
                 break;
             case ScopeEnum.RedTeam:
-                _targetScope = _manager.GetScope("Red team");
+                _targetScope = ScopeManager.Instance.GetScope("Red team");
                 break;
             case ScopeEnum.BlueTeam:
-                _targetScope = _manager.GetScope("Blue team");
+                _targetScope = ScopeManager.Instance.GetScope("Blue team");
                 break;
             case ScopeEnum.BothTeam:
-                _targetScope = _manager.GetScope("Teams");
+                _targetScope = ScopeManager.Instance.GetScope("Teams");
                 break;
         }
     }
@@ -96,6 +94,10 @@ public class Client : NetworkBehaviour
     public void SendChatMessage(string message)
     {
         _messenger.SendToServer(message, _targetScope);
-        message = "";
+    }
+
+    public void SendChatMessage(string message, int toClient)
+    {
+        _messenger.SendToServer(message, toClient);
     }
 }

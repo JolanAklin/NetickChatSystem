@@ -24,7 +24,6 @@ namespace NetickChatSystem
 {
     [RequireComponent(typeof(ChatNetworkEventsListner))]
     [RequireComponent(typeof(ConnectionsManager))]
-    [RequireComponent(typeof(ScopeManager))]
     public class ChatMessenger : MonoBehaviour
     {
         public bool isInitialized {get; private set;}
@@ -32,7 +31,6 @@ namespace NetickChatSystem
         private ChatNetworkEventsListner _listener;
         private NetDataWriter _writer = new NetDataWriter();
         private ConnectionsManager _connectionManager;
-        private ScopeManager _scopeManager;
 
         private Dictionary<NetworkConnection, Scope> _connectionsScope = new Dictionary<NetworkConnection, Scope>();
 
@@ -65,7 +63,6 @@ namespace NetickChatSystem
             _sandbox = sandbox;
             _listener = listner;
             _connectionManager = GetComponent<ConnectionsManager>();
-            _scopeManager = GetComponent<ScopeManager>();
             ChatLiteNetTransport._onChatReceive += OnChatMessageReceivedHandler;
             Styler = _senderStyle;
 
@@ -128,13 +125,13 @@ namespace NetickChatSystem
                 string message = ReadMessageFromClient(reader, out bool isScopeTarget, out uint value);
                 if(isScopeTarget) // client is targeting a scope
                 {
-                    Scope targetScope = _scopeManager.GetScope(value);
+                    Scope targetScope = ScopeManager.Instance.GetScope(value);
                     if(targetScope == null)
                         return;
                     OnServerReceiveChatMessage(message, targetScope, e.connection);
                 }
-                else // client is target another client
-                    OnServerReceiveChatMessage(message, value, e.connection);
+                else // client is targeting another client
+                    OnServerReceiveChatMessage(message, (int)value, e.connection);
             }
         }
 
@@ -194,16 +191,20 @@ namespace NetickChatSystem
             SendChatMessageToScope(message, _senderStyle.GenerateData(netCon.Id, target, GetScope(netCon), isForeignSend), target);
         }
 
-        private void OnServerReceiveChatMessage(string message, uint NetConnectionID, NetickConnection sender)
+        // send the received message to the right client
+        private void OnServerReceiveChatMessage(string message, int NetConnectionID, NetickConnection sender)
         {
-            if (!_connectionManager.GetNetConByNetickConnection(sender, out NetworkConnection netConn))
+            if (!_connectionManager.GetNetConByNetickConnection(sender, out NetworkConnection senderNetCon))
             {
                 Debug.LogError("NetworkConnection not found");
                 return;
             }
-            _connectionManager.GetNetConByNetickConnection(sender, out NetworkConnection netCon);
-            // @TODO send message to only on client
-            Debug.LogWarning("this is not working at the moment");
+            if(!_connectionManager.GetNetConById(NetConnectionID, out NetworkConnection netCon))
+            {
+                Debug.LogError($"No client with the ID {NetConnectionID} exist");
+                return;
+            }
+            SendChatMessage(message, netCon, _senderStyle.GenerateData(senderNetCon.Id, netCon.Id, GetScope(senderNetCon)));
         }
 
         ///<summary>
@@ -267,6 +268,25 @@ namespace NetickChatSystem
             _writer.Put(false); // false = sent by a client
             _writer.Put(true); // if true, the next int will be a scope. If false the next int will be a NetworkConnection ID.
             _writer.Put(target.scope);
+            _writer.Put(message);
+            ChatLiteNetTransport.LNLConnection connection = (ChatLiteNetTransport.LNLConnection)_connectionManager.ServerConnection.TransportConnection;
+            connection.ChatSend(_writer.Data, _writer.Data.Length);
+        }
+
+        ///<summary>
+        /// Send a message to the server and the server will send it to the given client
+        ///</summary>
+        public void SendToServer(string message, int clientId)
+        {
+            if (_sandbox.IsServer)
+            {
+                Debug.LogWarning("Message not sent. You are calling this function from the server. It should only be called on the client.");
+                return;
+            }
+            _writer.Reset();
+            _writer.Put(false); // false = sent by a client
+            _writer.Put(false); // if true, the next int will be a scope. If false the next int will be a NetworkConnection ID.
+            _writer.Put(clientId);
             _writer.Put(message);
             ChatLiteNetTransport.LNLConnection connection = (ChatLiteNetTransport.LNLConnection)_connectionManager.ServerConnection.TransportConnection;
             connection.ChatSend(_writer.Data, _writer.Data.Length);

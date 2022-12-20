@@ -26,8 +26,18 @@ namespace NetickChatSystem
 
         private ushort _scopeNumber = 0;
 
+        public static ScopeManager Instance {get; private set;}
+
         private void Awake() {
             AddScope(Scope.Everyone);
+
+            if(Instance == null)
+                Instance = this;
+            else
+            {
+                Debug.LogWarning("There is more than one ScopeManager. Destroying.");
+                Destroy(this);
+            }
         }
 
         public void RegisterScope(string name, Scope.ForeignReceivePolicy foreignReceivePolicy = Scope.ForeignReceivePolicy.forbidden)
@@ -44,6 +54,12 @@ namespace NetickChatSystem
         public void RegisterExtendedScope(string name, Scope[] scopes, Scope.CheckPolicy checkPolicy, Scope.ForeignReceivePolicy foreignReceivePolicy)
         {
             Scope scope = new Scope(name, scopes, false, checkPolicy, foreignReceivePolicy);
+            AddScope(scope);
+        }
+
+        public void RegisterExtendedScope(string name, string[] scopesName, Scope.CheckPolicy checkPolicy, Scope.ForeignReceivePolicy foreignReceivePolicy)
+        {
+            Scope scope = new Scope(name, scopesName, false, checkPolicy, foreignReceivePolicy);
             AddScope(scope);
         }
 
