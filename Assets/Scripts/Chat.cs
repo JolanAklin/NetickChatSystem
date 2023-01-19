@@ -18,8 +18,8 @@ public class Chat : MonoBehaviour
 
     private void Start()
     {
-        _messenger = _sandbox.FindGameObjectWithTag("NetController").GetComponent<ChatMessenger>();
-        _scopeManager = _messenger.GetComponent<ScopeManager>();
+        _messenger = ChatSystem.Instance.GetChatMessenger(_sandbox);
+        _scopeManager = ScopeManager.Instance;
         _messenger.OnClientReceiveChatMessage += OnMessageReceived;
 
         _client = GetComponentInParent<Client>();

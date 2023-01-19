@@ -61,6 +61,7 @@ namespace NetickChatSystem
         public void Init (NetworkSandbox sandbox, ChatNetworkEventsListner listner)
         {
             _sandbox = sandbox;
+            ChatSystem.Instance.AddChatMessenger(sandbox, this);
             _listener = listner;
             _connectionManager = GetComponent<ConnectionsManager>();
             ChatLiteNetTransport._onChatReceive += OnChatMessageReceivedHandler;
@@ -100,6 +101,8 @@ namespace NetickChatSystem
 
         public void OnDestroy()
         {
+            if(ChatSystem.Instance != null)
+                ChatSystem.Instance.RemoveChatMessenger(_sandbox);
             ChatLiteNetTransport._onChatReceive -= OnChatMessageReceivedHandler;
             if(_connectionManager != null)
             {
