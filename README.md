@@ -37,7 +37,7 @@ ChatMessenger.SendChatMessageToScope(string message, Scope target)
 eg:
 ```
 [...]
-  _chat = GetComponent<ChatMessenger>();
+  _chat = ChatSystem.Instance.GetChatMessenger(_sandbox); // _sandbox is the server sandbox
 [...]
 public override void OnClientConnected(NetworkSandbox sandbox, NetworkConnection client)
 {
@@ -53,7 +53,7 @@ ChatMessenger.SendToServer(string message, int targetClient)
 eg:
 ```
 [...]
-_messenger = Sandbox.FindGameObjectWithTag("NetController").GetComponent<ChatMessenger>();
+_messenger = ChatSystem.Instance.GetChatMessenger(_sandbox); // _sandbox is the client sandbox
 [...]
 _messenger.SendToServer(message, ScopeManager.Instance.GetScope("Blue team"));
 ```
