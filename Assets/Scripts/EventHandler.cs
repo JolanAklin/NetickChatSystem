@@ -33,7 +33,7 @@ public class EventHandler : ChatNetworkEventsListner
         obj.GetComponent<Client>()._netConnection = client;
 
         _chat.SendChatMessageToOne($"Welcome to the server Client {client.Id}", client);
-        _chat.SendChatMessageToScope($"Client {client.Id} connected", Scope.Everyone);
+        _chat.SendChatMessageToScope($"Client {client.Id} connected", Scope.Everyone, Displays.hud);
     }
 
     public override void OnClientDisconnected(NetworkSandbox sandbox, NetworkConnection client)

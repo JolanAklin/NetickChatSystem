@@ -19,60 +19,63 @@ using UnityEngine;
 using Netick;
 using NetickChatSystem;
 
-public class ChatSystem : MonoBehaviour
+namespace NetickChatSystem
 {
-    public static ChatSystem Instance {get; private set;}
-    private Dictionary<NetworkSandbox, ChatMessenger> _messengers = new Dictionary<NetworkSandbox, ChatMessenger>();
-    private void Awake() {
-        if(Instance == null)
-        {
-            Instance = this;
-        }else
-        {
-            Debug.LogWarning("There is more than one ChatSystem. Destroying");
-            Destroy(this);
-        }
-    }
-
-    private void OnDestroy()
+    public class ChatSystem : MonoBehaviour
     {
-        if(Instance == this)
-            Instance = null;
-    }
+        public static ChatSystem Instance {get; private set;}
+        private Dictionary<NetworkSandbox, ChatMessenger> _messengers = new Dictionary<NetworkSandbox, ChatMessenger>();
+        private void Awake() {
+            if(Instance == null)
+            {
+                Instance = this;
+            }else
+            {
+                Debug.LogWarning("There is more than one ChatSystem. Destroying");
+                Destroy(this);
+            }
+        }
 
-    // internal use only
-    public void AddChatMessenger(NetworkSandbox sandbox, ChatMessenger messenger)
-    {
-        if(_messengers.ContainsKey(sandbox))
+        private void OnDestroy()
         {
-            Debug.Log($"There is already a chatmessenger registred for this sandbox ({sandbox.name}). Only one ChatMessenger per sandbox is supported.");
+            if(Instance == this)
+                Instance = null;
         }
-        else
-        {
-            _messengers.Add(sandbox, messenger);
-        }
-    }
 
-    // internal use only
-    public void RemoveChatMessenger(NetworkSandbox sandbox)
-    {
-        if (_messengers.ContainsKey(sandbox))
+        // internal use only
+        public void AddChatMessenger(NetworkSandbox sandbox, ChatMessenger messenger)
         {
-            _messengers.Remove(sandbox);
+            if(_messengers.ContainsKey(sandbox))
+            {
+                Debug.Log($"There is already a chatmessenger registred for this sandbox ({sandbox.name}). Only one ChatMessenger per sandbox is supported.");
+            }
+            else
+            {
+                _messengers.Add(sandbox, messenger);
+            }
         }
-        else
-        {
-            Debug.Log($"No ChatSystem for this sandbox ({sandbox.name})");
-        }
-    }
 
-    ///<summary>
-    ///Get the ChatMessenger in use for the given sandbox
-    ///</summary>
-    public ChatMessenger GetChatMessenger(NetworkSandbox sandbox)
-    {
-        if(_messengers.TryGetValue(sandbox, out ChatMessenger messenger))
-            return messenger;
-        return null;
+        // internal use only
+        public void RemoveChatMessenger(NetworkSandbox sandbox)
+        {
+            if (_messengers.ContainsKey(sandbox))
+            {
+                _messengers.Remove(sandbox);
+            }
+            else
+            {
+                Debug.Log($"No ChatSystem for this sandbox ({sandbox.name})");
+            }
+        }
+
+        ///<summary>
+        ///Get the ChatMessenger in use for the given sandbox
+        ///</summary>
+        public ChatMessenger GetChatMessenger(NetworkSandbox sandbox)
+        {
+            if(_messengers.TryGetValue(sandbox, out ChatMessenger messenger))
+                return messenger;
+            return null;
+        }
     }
 }
