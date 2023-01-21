@@ -101,7 +101,20 @@ namespace NetickChatSystem
                 _clientTarget = null;
             }
         }
-        public abstract string GetSenderStyle(StylerData data);
+
+        private System.Text.UTF8Encoding _encoding = new System.Text.UTF8Encoding();
+        
+        public string GetSenderStyle(StylerData data)
+        {
+            string senderStyle = GenerateSenderStyle(data);
+            if(_encoding.GetByteCount(senderStyle) > 300)
+            {
+                Debug.LogError("GenerateSenderStyle() should not return a string longer than 300 char");
+                return null;
+            }
+            return senderStyle;
+        }
+        public abstract string GenerateSenderStyle(StylerData data);
         
         public abstract StylerData GenerateData();
         public abstract StylerData GenerateData(Scope target);

@@ -33,6 +33,8 @@ namespace NetickChatSystem
         private ConnectionsManager _connectionManager;
         public ChatDisplay _chatDisplay {get; private set;}
 
+        private System.Text.UTF8Encoding _encoding = new System.Text.UTF8Encoding();
+
         private Dictionary<NetworkConnection, Scope> _connectionsScope = new Dictionary<NetworkConnection, Scope>();
 
         [SerializeField] private SenderStyler _senderStyle;
@@ -205,6 +207,11 @@ namespace NetickChatSystem
         ///</summary>
         public void SendChatMessageToOne(string message, NetworkConnection client)
         {
+            if (_encoding.GetByteCount(message) > 1500)
+            {
+                Debug.LogError("The message should not exceed 1500 bytes in length");
+                return;
+            }
             if (_sandbox.IsClient)
             {
                 Debug.LogWarning("Message not sent. You are calling this function from the client. It should only be called on the server.");
@@ -226,6 +233,11 @@ namespace NetickChatSystem
         ///</summary>
         private void SendChatMessageToScope(string message, SenderStyler.StylerData data, Scope scope, Displays display)
         {
+            if (_encoding.GetByteCount(message) > 1500)
+            {
+                Debug.LogError("The message should not exceed 1500 bytes in length");
+                return;
+            }
             if (_sandbox.IsClient)
             {
                 Debug.LogWarning("Message not sent. You are calling this function from the client. It should only be called on the server.");
@@ -256,6 +268,11 @@ namespace NetickChatSystem
 
         private void SendChatMessage(string message, NetworkConnection client, SenderStyler.StylerData data, Displays display = (Displays)0)
         {
+            if (_encoding.GetByteCount(message) > 1500)
+            {
+                Debug.LogError("The message should not exceed 1500 bytes in length");
+                return;
+            }
             _writer.Reset();
             _writer.Put(true); // true = sent by the server
             _writer.Put((byte)display);
@@ -269,6 +286,11 @@ namespace NetickChatSystem
         ///</summary>
         public void SendToServer(string message, Scope target)
         {
+            if (_encoding.GetByteCount(message) > 1500)
+            {
+                Debug.LogError("The message should not exceed 1500 bytes in length");
+                return;
+            }
             if(_sandbox.IsServer)
             {
                 Debug.LogWarning("Message not sent. You are calling this function from the server. It should only be called on the client.");
@@ -288,6 +310,11 @@ namespace NetickChatSystem
         ///</summary>
         public void SendToServer(string message, int clientId)
         {
+            if(_encoding.GetByteCount(message) > 1500)
+            {
+                Debug.LogError("The message should not exceed 1500 bytes in length");
+                return;
+            }
             if (_sandbox.IsServer)
             {
                 Debug.LogWarning("Message not sent. You are calling this function from the server. It should only be called on the client.");
