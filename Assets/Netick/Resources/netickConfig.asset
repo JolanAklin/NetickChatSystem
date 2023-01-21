@@ -18,7 +18,7 @@ MonoBehaviour:
   WeaverErrors: []
   _Prefabs:
   - Obj: {fileID: 4102401368432441176, guid: a99f475a998596e5cb803b1eae31fc15, type: 3}
-    InstanceId: 26634
+    InstanceId: 26648
     Name: client
     FileName: Assets/Prefabs/client.prefab
     GO: {fileID: 877621167958917338, guid: a99f475a998596e5cb803b1eae31fc15, type: 3}

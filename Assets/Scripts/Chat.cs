@@ -18,16 +18,16 @@ public class Chat : MonoBehaviour
 
     private void Start()
     {
-        _messenger = _sandbox.FindGameObjectWithTag("NetController").GetComponent<ChatMessenger>();
-        _scopeManager = _messenger.GetComponent<ScopeManager>();
-        _messenger.OnClientReceiveChatMessage += OnMessageReceived;
+        _messenger = ChatSystem.Instance.GetChatMessenger(_sandbox);
+        _scopeManager = ScopeManager.Instance;
+        _messenger._chatDisplay.AddDisplay(Displays.chat, (string message) => {OnMessageReceived(message);});
 
         _client = GetComponentInParent<Client>();
     }
 
     private void OnDestroy()
     {
-        _messenger.OnClientReceiveChatMessage -= OnMessageReceived;
+        _messenger._chatDisplay.AddDisplay(Displays.chat, null);
     }
 
     public void SendMessage(TMP_InputField message)
@@ -46,9 +46,9 @@ public class Chat : MonoBehaviour
         _client.ChangeScope((Client.ScopeEnum)value);
     }
 
-    private void OnMessageReceived(object sender, ChatMessenger.OnClientReceiveChatMessageEventArgs e)
+    private void OnMessageReceived(string message)
     {
-        _messages.text += "\n" + e.message;
+        _messages.text += "\n" + message;
     }
 
     private void SendToClient()

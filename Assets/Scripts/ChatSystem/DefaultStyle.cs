@@ -51,7 +51,8 @@ public class DefaultStyle : SenderStyler
     }
     #endregion
 
-    public override string GetSenderStyle(StylerData data)
+    // the returned string should not go over 300 bytes
+    public override string GenerateSenderStyle(StylerData data)
     {
         if(data._isScopeSend)
         {
