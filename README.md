@@ -27,7 +27,7 @@ OnClientDisconnected
 RemoveNetConnection
 ```
 ### Sending messages
-Messages are sent from the client to the server, then the server dispatches the message to the right clients. Messages are dispatched automaticly.
+Messages are sent from the client to the server, then the server dispatches the message to the right clients. Messages are dispatched automaticly. Chat messages can't exceed 1500 bytes in length (= to 1500 char when using alphanumerical char). 
 
 From the server :
 ```
@@ -59,6 +59,25 @@ _messenger.SendToServer(message, ScopeManager.Instance.GetScope("Blue team"));
 ```
 For more examples, see the demo. Script of interest are EventHandler.cs, Client.cs, Chat.cs.
 
+### Displaying messages
+You can specify where the message sent by the server will be displayed.
+First you need to register your script to receive the message :
+```
+_messenger = ChatSystem.Instance.GetChatMessenger(_sandbox); // get the ChatMessenger object
+[...]
+// register your function.
+_messenger._chatDisplay.AddDisplay(Displays.chat, (string message) => {OnMessageReceived(message);});
+```
+Then you can create your function to display the received chat message (eg.):
+```
+private void OnMessageReceived(string message)
+{
+    _messages.text += "\n" + message;
+}
+```
+
+You can add/remove/rename values inside displays enum in Displays.cs. The value 0 is the default when not specifying a display target when sending a message.
+
 ### Custom chat styling
 To customize chat looks, you can create a new scripts that inherit from SenderStyler. See DefaultStyle.cs for implementation.
 ## License
@@ -72,6 +91,6 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ## Important notes
-Only Scripts with the MIT License are the one that have the MIT License header on it. Other scripts are the property of their creator (Chat.cs, Client.cs, EventHandler.cs are created by me. But you can use them as you will).
+Only Scripts with the MIT License are the one that have the MIT License header on it. Other scripts are the property of their creator (Chat.cs, Client.cs, EventHandler.cs, HUDdisplay.cs, Displays.cd are created by me. But you can use them as you will).
 ### Disclaimer
 This project is not affiliated nor endorsed by Netick. 
