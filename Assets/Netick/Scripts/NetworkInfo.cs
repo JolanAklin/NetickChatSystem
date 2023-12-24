@@ -1,14 +1,16 @@
 using UnityEngine;
 using Netick;
+using Netick.Unity;
+using Network = Netick.Unity.Network;
 
 namespace Netick.Samples
 {
     [AddComponentMenu("Netick/Network Info")]
-    public class NetworkInfo : NetworkEventsListner
+    public class NetworkInfo : NetworkEventsListener
     {
         private void OnGUI()
         {
-            if (Netick.Network.Instance != null)
+            if (Network.Instance != null)
             {
                 if (Sandbox != null && Sandbox.IsConnected)
                 {

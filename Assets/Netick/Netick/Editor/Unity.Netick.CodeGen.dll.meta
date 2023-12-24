@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f6bff49fe1aa8a146b4eea05ee9d5dd2
+guid: 01b9bf6bb3196a546b86962161fb0cf8
 PluginImporter:
   externalObjects: {}
   serializedVersion: 2
@@ -12,17 +12,6 @@ PluginImporter:
   validateReferences: 1
   platformData:
   - first:
-      : Any
-    second:
-      enabled: 0
-      settings:
-        Exclude Android: 1
-        Exclude Editor: 0
-        Exclude Linux64: 1
-        Exclude OSXUniversal: 1
-        Exclude Win: 1
-        Exclude Win64: 1
-  - first:
       Any: 
     second:
       enabled: 0
@@ -33,24 +22,6 @@ PluginImporter:
       enabled: 1
       settings:
         DefaultValueInitialized: true
-  - first:
-      Standalone: Linux64
-    second:
-      enabled: 0
-      settings:
-        CPU: None
-  - first:
-      Standalone: Win
-    second:
-      enabled: 0
-      settings:
-        CPU: None
-  - first:
-      Standalone: Win64
-    second:
-      enabled: 0
-      settings:
-        CPU: None
   - first:
       Windows Store Apps: WindowsStoreApps
     second:

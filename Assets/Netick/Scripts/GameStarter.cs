@@ -1,22 +1,27 @@
 using UnityEngine;
 using Netick;
+using Netick.Unity;
+using Network = Netick.Unity.Network;
 
 namespace Netick.Samples
 {
     [AddComponentMenu("Netick/Game Starter")]
-    public class GameStarter : NetworkEventsListner
+    public class GameStarter : NetworkEventsListener
     {
-        public GameObject SandboxPrefab;
-        public StartMode  Mode            = StartMode.ServerAndClient;
+        public GameObject               SandboxPrefab;
+        public NetworkTransportProvider Transport;
+        public StartMode                Mode                           = StartMode.MultiplePeers;
         [Range(1, 5)]
-        public int        Clients         = 1;
-        public bool       AutoStart;
-        public bool       AutoConnect;
+        public int                      Clients                        = 1;
+        public bool                     StartServerInMultiplePeersMode = true;
+
+        public bool                     AutoStart;
+        public bool                     AutoConnect;
 
         [Header("Network")]
         [Range(0, 65535)]
-        public int        Port;
-        public string     ServerIPAddress = "127.0.0.1";
+        public int                      Port;
+        public string                   ServerIPAddress                = "127.0.0.1";
 
         private void Reset()
         {
@@ -28,23 +33,23 @@ namespace Netick.Samples
         {
             if (Application.isBatchMode)
             {
-                Netick.Network.StartAsServer(Port, SandboxPrefab);
+                Network.StartAsServer(Transport, Port, SandboxPrefab);
             }
 
             else if (AutoStart)
             {
-                if (Netick.Network.Instance == null)
+                if (Network.Instance == null)
                 {
                     switch (Mode)
                     {
                         case StartMode.Server:
-                            Netick.Network.StartAsServer(Port, SandboxPrefab);
+                            Network.StartAsServer(Transport, Port, SandboxPrefab);
                             break;
                         case StartMode.Client:
-                            Netick.Network.StartAsClient(Port, SandboxPrefab).Connect(Port, ServerIPAddress);
+                            Network.StartAsClient(Transport, Port, SandboxPrefab).Connect(Port, ServerIPAddress);
                             break;
-                        case StartMode.ServerAndClient:
-                            var sandboxes = Netick.Network.StartAsServerAndClient(Port, SandboxPrefab, Clients);
+                        case StartMode.MultiplePeers:
+                            var sandboxes = Network.StartAsMultiplePeers(Transport, Port, SandboxPrefab, StartServerInMultiplePeersMode, Clients);
 
                             if (AutoConnect)
                             {
@@ -61,7 +66,7 @@ namespace Netick.Samples
 
         private void OnGUI()
         {
-            if (Netick.Network.IsRunning)
+            if (Network.IsRunning)
             {
                 if (Sandbox != null && Sandbox.IsClient)
                 {
@@ -88,18 +93,18 @@ namespace Netick.Samples
 
             if (GUI.Button(new Rect(10, 10, 200, 50), "Run Client"))
             {
-                var sandbox = Netick.Network.StartAsClient(Port, SandboxPrefab);
+                var sandbox = Network.StartAsClient(Transport, Port, SandboxPrefab);
                 sandbox.Connect(Port, ServerIPAddress);
             }
 
             if (GUI.Button(new Rect(10, 70, 200, 50), "Run Server"))
             {
-                Netick.Network.StartAsServer(Port, SandboxPrefab);
+                Network.StartAsServer(Transport, Port, SandboxPrefab);
             }
 
             if (GUI.Button(new Rect(10, 130, 200, 50), "Run Server + Client"))
             {
-                var sandboxes = Netick.Network.StartAsServerAndClient(Port, SandboxPrefab, Clients);
+                var sandboxes = Network.StartAsMultiplePeers(Transport, Port, SandboxPrefab, StartServerInMultiplePeersMode, Clients);
 
                 if (AutoConnect)
                 {
