@@ -14,5 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _chatGroups:
   - {fileID: 11400000, guid: 833c6b5a8c99a0a4aa4695005d8fd0fc, type: 2}
-  - {fileID: 11400000, guid: ffb8718d287ea35429262e890d518212, type: 2}
   - {fileID: 11400000, guid: f8832de49d1b6924dba5f533c68329fc, type: 2}
+  - {fileID: 11400000, guid: ffb8718d287ea35429262e890d518212, type: 2}
+  _onMessageReceivedEvents:
+  - {fileID: 11400000, guid: c07c43d0ab058fd4f9a5e2326fac605e, type: 2}
+  - {fileID: 11400000, guid: 02137f2cc399bf64785366ad5107b668, type: 2}
