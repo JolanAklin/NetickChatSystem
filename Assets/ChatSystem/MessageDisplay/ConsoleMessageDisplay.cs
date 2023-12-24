@@ -6,6 +6,6 @@ public class ConsoleMessageDisplay : AbstractMessageDisplay
 {
     public override void Display(string message)
     {
-        Debug.Log("Message displayed from the ConsoleMessageDisplay : "+message);
+        Debug.Log("Message displayed from the ConsoleMessageDisplay : " + message);
     }
 }

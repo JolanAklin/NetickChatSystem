@@ -4,17 +4,12 @@ using UnityEngine;
 
 namespace ChatSystem
 {
-    public class ReceivedMessageManager : MonoBehaviour
+    public static class ReceivedMessageManager
     {
-        public void OnMessagedReceived(string from, string message, int method)
+        public static void OnMessagedReceived(string from, string message, int method)
         {
             OnMessageReceivedEvent onMessageReceivedEvent = Config.instance.GetOnMessageReceivedEventById(method);
             onMessageReceivedEvent?.Invoke(message);
-        }
-
-        private void Start()
-        {
-            OnMessagedReceived("l","test", 0);
         }
     }
 }
