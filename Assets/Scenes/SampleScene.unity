@@ -155,6 +155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _onMessageReceived: {fileID: 11400000, guid: 02137f2cc399bf64785366ad5107b668, type: 2}
+  _chatSystemManager: {fileID: 1111513736}
 --- !u!4 &42525
 Transform:
   m_ObjectHideFlags: 0
@@ -596,6 +597,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _onMessageReceived: {fileID: 11400000, guid: c07c43d0ab058fd4f9a5e2326fac605e, type: 2}
+  _chatSystemManager: {fileID: 1111513736}
 --- !u!114 &506122667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -864,6 +866,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1040040278}
   m_CullTransparentMesh: 1
+--- !u!1 &1111513735
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1111513737}
+  - component: {fileID: 1111513736}
+  m_Layer: 0
+  m_Name: ChatSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1111513736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1111513735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ad49064464499a4f86abb16ac9874b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _chatSystemConfig: {fileID: 11400000, guid: 2593b36aeedb4274ca1a5522128cfd47, type: 2}
+  SandboxId: 0
+--- !u!4 &1111513737
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1111513735}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 422.87775, y: 179.95508, z: -3.413795}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1154803334
 GameObject:
   m_ObjectHideFlags: 0
@@ -874,6 +922,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1154803338}
   - component: {fileID: 1154803337}
+  - component: {fileID: 1154803339}
   m_Layer: 0
   m_Name: Network
   m_TagString: NetController
@@ -917,6 +966,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1154803339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1154803334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c61cd2ae9cff1846a1ba55f1fd39d3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _chatSystemManager: {fileID: 1111513736}
 --- !u!1 &1201090401
 GameObject:
   m_ObjectHideFlags: 0
@@ -1210,6 +1272,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _inputField: {fileID: 1201090403}
   _button: {fileID: 1697657925}
+  _chatSystemManager: {fileID: 1111513736}
 --- !u!1 &1697657923
 GameObject:
   m_ObjectHideFlags: 0
@@ -1354,6 +1417,7 @@ GameObject:
   - component: {fileID: 1900248601}
   - component: {fileID: 1900248600}
   - component: {fileID: 1900248599}
+  - component: {fileID: 1900248602}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -1411,6 +1475,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1900248602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1900248598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -355052428, guid: da78c2c9df60edc4fb5f65b59fa57c41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2123108810
 GameObject:
   m_ObjectHideFlags: 0
@@ -1557,3 +1633,4 @@ SceneRoots:
   - {fileID: 506122665}
   - {fileID: 1249839929}
   - {fileID: 1900248601}
+  - {fileID: 1111513737}

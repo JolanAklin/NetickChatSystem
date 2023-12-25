@@ -6,10 +6,10 @@ namespace ChatSystem
 {
     public static class ReceivedMessageManager
     {
-        public static void OnMessagedReceived(string from, string message, int method)
+        public static void OnMessagedReceived(int sandboxId, string from, string message, int method)
         {
-            OnMessageReceivedEvent onMessageReceivedEvent = Config.instance.GetOnMessageReceivedEventById(method);
-            onMessageReceivedEvent?.Invoke(message);
+            OnMessageReceivedEvent onMessageReceivedEvent = ChatSystemManager.ChatSystemConfig.GetOnMessageReceivedEventById(method);
+            onMessageReceivedEvent?.Invoke(sandboxId, message);
         }
     }
 }

@@ -6,9 +6,6 @@ namespace ChatSystem
     [CreateAssetMenu(fileName = "ChatSystemConfig", menuName = "Chat system/Config", order = 1)]
     public class Config : ScriptableObject
     {
-
-        public static Config instance {  get; private set; }
-
         [SerializeField]
         private Group[] _chatGroups = new Group[0];
 
@@ -17,7 +14,6 @@ namespace ChatSystem
 
         private void OnValidate()
         {
-            instance = this;
             for (int i = 0; i < _chatGroups.Length; i++)
             {
                 if(_chatGroups[i] != null )

@@ -9,7 +9,6 @@ namespace ChatSystem.Inspectors
     [CustomEditor(typeof(Group))]
     public class Group_Inspector : Editor
     {
-        string[] options = new string[] { "CanJump", "CanShoot", "CanSwim" };
 
         SerializedProperty maskField;
 
@@ -29,7 +28,13 @@ namespace ChatSystem.Inspectors
             DrawPropertiesExcluding(serializedObject, toMask);
 
             // Draw the mask field using EditorGUILayout.MaskField
-            maskField.intValue = EditorGUILayout.MaskField("Can see messages from", maskField.intValue, Config.instance.getGroupList());
+            if(ChatSystemManager.ChatSystemConfig == null)
+            {
+                EditorGUILayout.LabelField("Create a gameobject with ChatSystemManager and set the ChatSystemConfig");
+            }
+            else{
+                maskField.intValue = EditorGUILayout.MaskField("Can see messages from", maskField.intValue, ChatSystemManager.ChatSystemConfig?.getGroupList());
+            }
 
             // Apply changes to the serialized object
             serializedObject.ApplyModifiedProperties();

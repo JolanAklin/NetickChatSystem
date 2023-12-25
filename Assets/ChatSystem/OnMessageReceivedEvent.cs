@@ -12,11 +12,11 @@ namespace ChatSystem
 
         HashSet<OnMessageReceivedEventListener> _listeners = new HashSet<OnMessageReceivedEventListener>();
 
-        public void Invoke(string message)
+        public void Invoke(int sandboxId, string message)
         {
             foreach (var listener in _listeners)
             {
-                listener.RaiseEvent(message);
+                listener.RaiseEvent(sandboxId, message);
             }
         }
 
