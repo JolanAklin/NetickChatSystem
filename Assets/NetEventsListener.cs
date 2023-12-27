@@ -12,4 +12,11 @@ public class NetEventsListener : NetworkEventsListener
     {
         _chatSystemManager.SandboxId = sandbox.GetInstanceID();
     }
+
+    public override void OnClientConnected(NetworkSandbox sandbox, NetworkConnection client)
+    {
+        Debug.Log("sending chat message");
+        byte[] text = System.Text.Encoding.UTF8.GetBytes("this is a test");
+        ((LNLTransportProviderWchat.LNLConnection)client.TransportConnection).ChatSend(text, text.Length);
+    }
 }

@@ -1,3 +1,13 @@
+### [0.9.3] Changelog - 2023/12/27
+
+- Improved heavy packet loss handling. Theoretically, It's possible to receive no packets from the server for an entire day (or more) and be back on track after that stops happening. Without needing to send the full networked world state.
+- Improved CSP handling of heavy packet loss. Now the client behaves more expectedly when heavy packet loss (no packets for seconds) occurs.
+- Improved CSP performance.
+- Improved memory usage on the client.
+- Added TransportConnection field to NetworkConnection, which can be used to get the transport connection.
+- Fixed an issue with NetworkTransform rotation interpolation.
+- Fixed various other issues.
+
 ### [0.8.11] Changelog - 2023/12/14
 
 - Changed NetworkSandbox.IsVisiable to NetworkSandbox.IsVisible.

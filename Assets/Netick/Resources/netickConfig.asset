@@ -16,31 +16,31 @@ MonoBehaviour:
   - Assembly-CSharp.dll
   _Prefabs:
   - Obj: {fileID: 6276855212308729943, guid: 84bdaf9c034444f408cc66234ee3344d, type: 3}
-    InstanceId: 27572
+    InstanceId: 27588
     Name: Bomb
     FileName: Assets/Netick/Samples/Bomberman/Network Prefabs/Bomb.prefab
     GO: {fileID: 8886278785656527844, guid: 84bdaf9c034444f408cc66234ee3344d, type: 3}
     Id: 0
   - Obj: {fileID: 8143126971102408644, guid: 98e433893a4b70f41a8ab2145afe3e07, type: 3}
-    InstanceId: 27576
+    InstanceId: 27592
     Name: Bomberman Player
     FileName: Assets/Netick/Samples/Bomberman/Network Prefabs/Bomberman Player.prefab
     GO: {fileID: 2511112182317059464, guid: 98e433893a4b70f41a8ab2145afe3e07, type: 3}
     Id: 1
   - Obj: {fileID: 4469672062832013922, guid: 8e254087cbaecc049ac87981c263d46c, type: 3}
-    InstanceId: 27580
+    InstanceId: 27596
     Name: DestroyableBlock
     FileName: Assets/Netick/Samples/Bomberman/Network Prefabs/DestroyableBlock.prefab
     GO: {fileID: 9137365252298567970, guid: 8e254087cbaecc049ac87981c263d46c, type: 3}
     Id: 2
   - Obj: {fileID: 9177126579482737267, guid: 09a0cccbd8f361641bd963785a4b016c, type: 3}
-    InstanceId: 27584
+    InstanceId: 27600
     Name: Power Up
     FileName: Assets/Netick/Samples/Bomberman/Network Prefabs/Power Up.prefab
     GO: {fileID: 3064325587269614628, guid: 09a0cccbd8f361641bd963785a4b016c, type: 3}
     Id: 3
   - Obj: {fileID: 5100633453439203130, guid: d66d5a97430d3364890108321123b309, type: 3}
-    InstanceId: 27588
+    InstanceId: 27604
     Name: FPS Player
     FileName: Assets/Netick/Samples/First Person Shooter/Network Prefabs/FPS Player.prefab
     GO: {fileID: 7011933354638177272, guid: d66d5a97430d3364890108321123b309, type: 3}
@@ -55,7 +55,7 @@ MonoBehaviour:
   ReceiveBufferSize: 32768
   SendBufferSize: 16384
   Timeout: 10
-  MaxPredicatedTicks: 64
+  MaxPredictedTicks: 64
   ServerDivisor: 1
   ClientDivisor: 1
   PredictedClientPhysics: 0
@@ -66,9 +66,11 @@ MonoBehaviour:
   SimServerLoss: 0
   SimClientLoss: 0
   EnableLagCompensation: 0
-  AoI: 0
+  EnableInterestManagement: 0
+  InterestGroupCount: 2
   SimulationCulling: 0
   CellSize: 450
-  WorldSize: 8000
+  WorldSize: {x: 8000, y: 1, z: 8000}
+  WorldSizeHeight: 8000
   UseSceneSwitchThread: 1
   LagCompensationDebug: 1
