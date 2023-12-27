@@ -16,7 +16,6 @@ public class NetEventsListener : NetworkEventsListener
     public override void OnClientConnected(NetworkSandbox sandbox, NetworkConnection client)
     {
         Debug.Log("sending chat message");
-        byte[] text = System.Text.Encoding.UTF8.GetBytes("this is a test");
-        ((LNLTransportProviderWchat.LNLConnection)client.TransportConnection).ChatSend(text, text.Length);
+        SendMessageManager.SendMessage("this is a test", (LNLTransportProviderWchat.LNLConnection)client.TransportConnection);
     }
 }

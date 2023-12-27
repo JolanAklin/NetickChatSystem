@@ -11,5 +11,11 @@ namespace ChatSystem
             OnMessageReceivedEvent onMessageReceivedEvent = ChatSystemManager.ChatSystemConfig.GetOnMessageReceivedEventById(method);
             onMessageReceivedEvent?.Invoke(sandboxId, message);
         }
+
+        public static void HandleIncomingBytes(byte[] data)
+        {
+            string text = System.Text.Encoding.UTF8.GetString(data);
+            Debug.Log("received chat message : " + text);
+        }
     }
 }

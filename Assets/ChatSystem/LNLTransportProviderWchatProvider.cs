@@ -228,9 +228,7 @@ namespace ChatSystem
 
                 if (deliveryMethod == DeliveryMethod.ReliableOrdered)
                 {
-                    //_onChatReceive?.Invoke(this, new OnChatReceiveEventArgs(_bytes, _clients[peer]));
-                    string text = System.Text.Encoding.UTF8.GetString(_bytes);
-                    Debug.Log("received chat message : " + text);
+                    ReceivedMessageManager.HandleIncomingBytes(_bytes);
                 }
                 else
                 {
