@@ -21,7 +21,7 @@ namespace ChatSystem
 
     public class LNLTransportProviderWchat : LiteNetLibTransport, INetEventListener
     {
-        new public class LNLConnection : TransportConnection
+        new public class LNLConnection : ChatTransportConnection
         {
             public LNLTransportProviderWchat Transport;
             public NetPeer LNLPeer;
@@ -44,9 +44,9 @@ namespace ChatSystem
                 LNLPeer.Send(Transport._bytes, 0, length, DeliveryMethod.Unreliable);
             }
 
-            public void ChatSend(byte[] data, int length)
+            public override void ChatSend(byte[] data)
             {
-                LNLPeer.Send(data, 0, length, DeliveryMethod.ReliableOrdered);
+                LNLPeer.Send(data, 0, data.Length, DeliveryMethod.ReliableOrdered);
             }
         }
 

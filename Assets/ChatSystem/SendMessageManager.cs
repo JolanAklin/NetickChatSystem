@@ -6,10 +6,10 @@ namespace ChatSystem
 {
     public static class SendMessageManager
     {
-        public static void SendMessage(string text, LNLTransportProviderWchat.LNLConnection connection)
+        public static void SendMessage(string text, ChatTransportConnection connection)
         {
             byte[] data = System.Text.Encoding.UTF8.GetBytes(text);
-            connection.ChatSend(data, data.Length);
+            connection.ChatSend(data);
         }
     }
 }

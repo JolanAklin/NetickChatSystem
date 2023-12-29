@@ -10,9 +10,12 @@ namespace ChatSystem
     {
         [SerializeField] private Config _chatSystemConfig;
 
+        public ChatTransportConnection ServerConnection { get; set; }
+        public bool IsClient { get; set; }
+        public int SandboxId { get; set; }
+
         public static Config ChatSystemConfig { get; private set; }
 
-        public int SandboxId;
 
         private void OnValidate()
         {
@@ -21,6 +24,7 @@ namespace ChatSystem
 
         private void Awake()
         {
+            IsClient = true;
             if(ChatSystemConfig == null)
             {
                 ChatSystemConfig = _chatSystemConfig;
