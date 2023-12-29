@@ -16,35 +16,41 @@ MonoBehaviour:
   - Assembly-CSharp.dll
   _Prefabs:
   - Obj: {fileID: 6276855212308729943, guid: 84bdaf9c034444f408cc66234ee3344d, type: 3}
-    InstanceId: 27594
+    InstanceId: 27602
     Name: Bomb
     FileName: Assets/Netick/Samples/Bomberman/Network Prefabs/Bomb.prefab
     GO: {fileID: 8886278785656527844, guid: 84bdaf9c034444f408cc66234ee3344d, type: 3}
     Id: 0
   - Obj: {fileID: 8143126971102408644, guid: 98e433893a4b70f41a8ab2145afe3e07, type: 3}
-    InstanceId: 27598
+    InstanceId: 27606
     Name: Bomberman Player
     FileName: Assets/Netick/Samples/Bomberman/Network Prefabs/Bomberman Player.prefab
     GO: {fileID: 2511112182317059464, guid: 98e433893a4b70f41a8ab2145afe3e07, type: 3}
     Id: 1
   - Obj: {fileID: 4469672062832013922, guid: 8e254087cbaecc049ac87981c263d46c, type: 3}
-    InstanceId: 27602
+    InstanceId: 27610
     Name: DestroyableBlock
     FileName: Assets/Netick/Samples/Bomberman/Network Prefabs/DestroyableBlock.prefab
     GO: {fileID: 9137365252298567970, guid: 8e254087cbaecc049ac87981c263d46c, type: 3}
     Id: 2
   - Obj: {fileID: 9177126579482737267, guid: 09a0cccbd8f361641bd963785a4b016c, type: 3}
-    InstanceId: 27606
+    InstanceId: 27614
     Name: Power Up
     FileName: Assets/Netick/Samples/Bomberman/Network Prefabs/Power Up.prefab
     GO: {fileID: 3064325587269614628, guid: 09a0cccbd8f361641bd963785a4b016c, type: 3}
     Id: 3
   - Obj: {fileID: 5100633453439203130, guid: d66d5a97430d3364890108321123b309, type: 3}
-    InstanceId: 27610
+    InstanceId: 27618
     Name: FPS Player
     FileName: Assets/Netick/Samples/First Person Shooter/Network Prefabs/FPS Player.prefab
     GO: {fileID: 7011933354638177272, guid: d66d5a97430d3364890108321123b309, type: 3}
     Id: 4
+  - Obj: {fileID: 1343293829740395391, guid: a9edb336b9e54f94d85a3eee087f452c, type: 3}
+    InstanceId: 27088
+    Name: Player
+    FileName: Assets/Prefabs/Player.prefab
+    GO: {fileID: 7552980362893082290, guid: a9edb336b9e54f94d85a3eee087f452c, type: 3}
+    Id: 5
   Replication: 1
   TickRate: 33.333336
   MaxPlayers: 16

@@ -29,9 +29,17 @@ namespace ChatSystem
                 return _clientId.Value;
             } 
         }
+        [HideInInspector]
         public NetworkSandbox _sandbox;
 
+        // list of all connected players. Only filled on the server
+        public static Dictionary<int, ChatPlayer> _connectedPlayer = new Dictionary<int, ChatPlayer>();
+
         public static Config ChatSystemConfig { get; private set; }
+
+        public Group _currentGroup;
+
+        public ChatPlayer _player;
 
 
         private void OnValidate()

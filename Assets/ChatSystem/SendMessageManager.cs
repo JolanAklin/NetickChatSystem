@@ -14,7 +14,7 @@ namespace ChatSystem
         public class Client
         {
             #region Send message to the server. The server will then dispatch the message to the correct clients
-            public static void SendMessageToTeam(int playerIdFrom, int teamFrom, int teamTo, string message, ChatTransportConnection connection)
+            public static void SendMessageToTeam(int playerIdFrom, uint teamFrom, uint teamTo, string message, ChatTransportConnection connection)
             {
                 if(playerIdFrom == -1) { Debug.LogError("You are trying to send a message when the client is not connected to a server"); return; }
                 _writer.Reset();
@@ -25,7 +25,7 @@ namespace ChatSystem
                 connection.ChatSend(_writer.Data);
             }
 
-            public static void SendMessageToClient(int playerIdFrom, int teamFrom, int playerIdTo, string message, ChatTransportConnection connection)
+            public static void SendMessageToClient(int playerIdFrom, uint teamFrom, int playerIdTo, string message, ChatTransportConnection connection)
             {
                 if (playerIdFrom == -1) { Debug.LogError("You are trying to send a message when the client is not connected to a server"); return; }
                 _writer.Reset();
@@ -39,7 +39,7 @@ namespace ChatSystem
             #endregion
         }
 
-        static byte PackTeamIds(int teamFrom, int teamTo)
+        static byte PackTeamIds(uint teamFrom, uint teamTo)
         {
             // Check if IDs are in range
             if (teamFrom < 0 || teamFrom > 15 || teamTo < 0 || teamTo > 15)

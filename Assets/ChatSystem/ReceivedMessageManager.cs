@@ -22,29 +22,37 @@ namespace ChatSystem
             {
                 NetDataReader reader = new NetDataReader(data);
                 bool toTeam = reader.GetBool();
+                Dictionary<uint, Group> groups = ChatSystemManager.ChatSystemConfig.getGroupDict();
                 if (toTeam)
                 {
                     int playerIdFrom = reader.GetUShort();
+                    string playerName = ChatSystemManager._connectedPlayer[playerIdFrom].PlayerName;
                     byte packedTeamsId = reader.GetByte();
-                    int teamFrom;
-                    int teamTo;
+                    uint teamFrom;
+                    uint teamTo;
                     UnpackTeamIds(packedTeamsId, out teamFrom, out teamTo);
+                    Group groupFrom = null;
+                    if (teamFrom != 0)
+                        groupFrom = groups[teamFrom];
+                    Group groupTo = null;
+                    if (teamTo != 0)
+                        groupTo = groups[teamTo];
                     string message = reader.GetString();
-                    Debug.Log("from " + playerIdFrom + " in team " + teamFrom + " to " + teamTo + " message " + message);
+                    Debug.Log("from " + playerName + " in team " + (groupFrom != null ? groupFrom.Name : "no team") + " to " + (groupTo != null ? groupTo.Name : "Everyone")  + " message " + message);
                 }
                 else
                 {
                     int playerIdFrom = reader.GetUShort();
-                    int teamFrom = reader.GetByte();
+                    uint teamFrom = reader.GetByte();
                     int playerTo = reader.GetUShort();
                     string message = reader.GetString();
                 }
             }
 
-            static void UnpackTeamIds(byte packedIds, out int teamFrom, out int teamTo)
+            static void UnpackTeamIds(byte packedIds, out uint teamFrom, out uint teamTo)
             {
-                teamFrom = packedIds >> 4;
-                teamTo = packedIds & 0x0F;
+                teamFrom = (uint)packedIds >> 4;
+                teamTo = (uint)packedIds & 0x0F;
             }
         }
     }

@@ -41,6 +41,16 @@ namespace ChatSystem
             return groups;
         }
 
+        public Dictionary<uint, Group> getGroupDict()
+        {
+            Dictionary<uint, Group> groups = new Dictionary<uint, Group>();
+            foreach (Group group in _chatGroups)
+            {
+                groups.Add(group._groupId, group);
+            }
+            return groups;
+        }
+
         public OnMessageReceivedEvent GetOnMessageReceivedEventById(int id)
         {
             if(_onMessageReceivedEvents.Length > id)
