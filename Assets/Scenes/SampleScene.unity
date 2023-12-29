@@ -896,7 +896,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _chatSystemConfig: {fileID: 11400000, guid: 2593b36aeedb4274ca1a5522128cfd47, type: 2}
-  SandboxId: 0
+  _sandbox: {fileID: 0}
 --- !u!4 &1111513737
 Transform:
   m_ObjectHideFlags: 0
@@ -948,7 +948,7 @@ MonoBehaviour:
   Clients: 1
   StartServerInMultiplePeersMode: 1
   AutoStart: 0
-  AutoConnect: 0
+  AutoConnect: 1
   Port: 21760
   ServerIPAddress: 127.0.0.1
 --- !u!4 &1154803338

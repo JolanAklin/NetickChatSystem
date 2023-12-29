@@ -13,7 +13,8 @@ public class TestSendMessage : MonoBehaviour
 
     public void Send()
     {
-        ReceivedMessageManager.OnMessagedReceived(_chatSystemManager.SandboxId, "test", _inputField.text, 0);
+        //ReceivedMessageManager.OnMessagedReceived(_chatSystemManager.SandboxId, "test", _inputField.text, 0);
+        SendMessageManager.Client.SendMessageToTeam(_chatSystemManager.ClientId, 1, 0, _inputField.text, _chatSystemManager.ServerConnection);
         _inputField.text = "";
     }
 }
