@@ -228,7 +228,7 @@ namespace ChatSystem
 
                 if (deliveryMethod == DeliveryMethod.ReliableOrdered)
                 {
-                    ReceivedMessageManager.Server.HandleIncomingBytes(_bytes);
+                    ReceivedMessageManager.HandleMessage(_bytes);
                 }
                 else
                 {

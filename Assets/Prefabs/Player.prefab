@@ -838,7 +838,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _chatSystemManager: {fileID: 0}
-  <Name>k__BackingField: 
+  <PlayerName>k__BackingField: 
+  _group: {fileID: 11400000, guid: ffb8718d287ea35429262e890d518212, type: 2}
   _testSendMessage: {fileID: 7356315184121460274}
 --- !u!1 &8402852623932747029
 GameObject:

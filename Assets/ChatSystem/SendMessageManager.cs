@@ -18,6 +18,7 @@ namespace ChatSystem
             {
                 if(playerIdFrom == -1) { Debug.LogError("You are trying to send a message when the client is not connected to a server"); return; }
                 _writer.Reset();
+                _writer.Put(true); // sent by client
                 _writer.Put(true); // send to team
                 _writer.Put((ushort)playerIdFrom);
                 _writer.Put(PackTeamIds(teamFrom, teamTo));
@@ -29,6 +30,7 @@ namespace ChatSystem
             {
                 if (playerIdFrom == -1) { Debug.LogError("You are trying to send a message when the client is not connected to a server"); return; }
                 _writer.Reset();
+                _writer.Put(true); // sent by client
                 _writer.Put(false); // send to specific client
                 _writer.Put((ushort)playerIdFrom);
                 _writer.Put((byte)teamFrom);
@@ -51,5 +53,19 @@ namespace ChatSystem
 
             return packedIds;
         }
+        public class Server
+        {
+            public static void SendMessageToTeam(int playerIdFrom, uint teamFrom, uint teamTo, string message, ChatTransportConnection connection)
+            {
+                _writer.Reset();
+                _writer.Put(false); // sent by client
+                _writer.Put(true); // send to team
+                _writer.Put((ushort)playerIdFrom);
+                _writer.Put(PackTeamIds(teamFrom, teamTo));
+                _writer.Put(message);
+                connection.ChatSend(_writer.Data);
+            }
+        }
     }
+
 }

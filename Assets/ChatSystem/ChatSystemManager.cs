@@ -37,8 +37,6 @@ namespace ChatSystem
 
         public static Config ChatSystemConfig { get; private set; }
 
-        public Group _currentGroup;
-
         public ChatPlayer _player;
 
 

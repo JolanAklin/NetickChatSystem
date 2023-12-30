@@ -24,10 +24,11 @@ public class NetEventsListener : NetworkEventsListener
         client.PlayerObject = playerObject;
         ChatPlayer player = playerObject.GetComponent<ChatPlayer>();
 
+        // save the player inside a list in the given group
+        if(player._group != null)
+            player._group._players.Add(player);
+        player.Connection = (ChatTransportConnection)client.TransportConnection;
         player.PlayerName = "player " + client.PlayerId.ToString();
-        Debug.Log("player " + client.PlayerId.ToString());
-        Debug.Log("set player name to " + player.PlayerName);
-
 
         ChatSystemManager._connectedPlayer.Add(client.PlayerId, player);
     }

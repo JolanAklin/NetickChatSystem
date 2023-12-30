@@ -13,7 +13,7 @@ public class TestSendMessage : MonoBehaviour
 
     public void Send()
     {
-        SendMessageManager.Client.SendMessageToTeam(_chatSystemManager.ClientId, _chatSystemManager._currentGroup._groupId, 0, _inputField.text, _chatSystemManager.ServerConnection);
+        SendMessageManager.Client.SendMessageToTeam(_chatSystemManager.ClientId, _chatSystemManager._player._group._groupId, _chatSystemManager._player._group._groupId, _inputField.text, _chatSystemManager.ServerConnection);
         _inputField.text = "";
     }
 }

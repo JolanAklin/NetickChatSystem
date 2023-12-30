@@ -15,5 +15,9 @@ namespace ChatSystem
 
         [Networked]
         public string PlayerName { get; set; }
+
+        public Group _group;
+
+        public ChatTransportConnection Connection { get; set; }
     }
 }
