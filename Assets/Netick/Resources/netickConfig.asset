@@ -45,12 +45,6 @@ MonoBehaviour:
     FileName: Assets/Netick/Samples/First Person Shooter/Network Prefabs/FPS Player.prefab
     GO: {fileID: 7011933354638177272, guid: d66d5a97430d3364890108321123b309, type: 3}
     Id: 4
-  - Obj: {fileID: 1343293829740395391, guid: a9edb336b9e54f94d85a3eee087f452c, type: 3}
-    InstanceId: 27090
-    Name: Player
-    FileName: Assets/Prefabs/Player.prefab
-    GO: {fileID: 7552980362893082290, guid: a9edb336b9e54f94d85a3eee087f452c, type: 3}
-    Id: 5
   Replication: 1
   TickRate: 33.333336
   MaxPlayers: 16

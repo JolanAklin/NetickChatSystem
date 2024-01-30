@@ -461,6 +461,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1154803338}
   - component: {fileID: 1154803337}
+  - component: {fileID: 1154803339}
   m_Layer: 0
   m_Name: Network
   m_TagString: NetController
@@ -482,9 +483,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SandboxPrefab: {fileID: 3229918696122119535, guid: 488c644f6240d6247a48d9dc99f03d3f,
     type: 3}
-  Transport: {fileID: 11400000, guid: e6f3643cc76af5b4b992193836b09eb5, type: 2}
+  Transport: {fileID: 11400000, guid: b5856e1fc62ad084799cc9c877b84c8d, type: 2}
   Mode: 2
-  Clients: 2
+  Clients: 1
   StartServerInMultiplePeersMode: 1
   AutoStart: 0
   AutoConnect: 1
@@ -505,6 +506,66 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1154803339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1154803334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8690c529ed3fdf47bd89be65374bc91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onConnectRequest:
+    m_PersistentCalls:
+      m_Calls: []
+  onConnectFailedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onStartup:
+    m_PersistentCalls:
+      m_Calls: []
+  onShutdown:
+    m_PersistentCalls:
+      m_Calls: []
+  onInput:
+    m_PersistentCalls:
+      m_Calls: []
+  onSceneLoaded:
+    m_PersistentCalls:
+      m_Calls: []
+  onSceneLoadStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  onClientSceneLoaded:
+    m_PersistentCalls:
+      m_Calls: []
+  onClientConnected:
+    m_PersistentCalls:
+      m_Calls: []
+  onClientDisconnected:
+    m_PersistentCalls:
+      m_Calls: []
+  onConnectedToServer:
+    m_PersistentCalls:
+      m_Calls: []
+  onDisconnectedFromServer:
+    m_PersistentCalls:
+      m_Calls: []
+  onObjectCreated:
+    m_PersistentCalls:
+      m_Calls: []
+  onObjectDestroyed:
+    m_PersistentCalls:
+      m_Calls: []
+  onMatchList:
+    m_PersistentCalls:
+      m_Calls: []
+  onMatchCreated:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1900248598
 GameObject:
   m_ObjectHideFlags: 0

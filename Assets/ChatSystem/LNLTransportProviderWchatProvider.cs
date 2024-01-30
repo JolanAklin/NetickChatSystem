@@ -21,7 +21,8 @@ namespace ChatSystem
 
     public class LNLTransportProviderWchat : LiteNetLibTransport, INetEventListener
     {
-        new public class LNLConnection : ChatTransportConnection
+
+        new public class LNLConnection : TransportConnection, IChatTransportConnection
         {
             public LNLTransportProviderWchat Transport;
             public NetPeer LNLPeer;
@@ -44,7 +45,7 @@ namespace ChatSystem
                 LNLPeer.Send(Transport._bytes, 0, length, DeliveryMethod.Unreliable);
             }
 
-            public override void ChatSend(byte[] data)
+            public void ChatSend(byte[] data)
             {
                 LNLPeer.Send(data, 0, data.Length, DeliveryMethod.ReliableOrdered);
             }
@@ -68,6 +69,8 @@ namespace ChatSystem
         private List<Session> _sessions = new List<Session>();
         private NetDataWriter _writer = new NetDataWriter();
         private string _machineName;
+
+        public event Action<byte[]> ChatMessageReceived;
 
         public override void Init()
         {
@@ -228,7 +231,7 @@ namespace ChatSystem
 
                 if (deliveryMethod == DeliveryMethod.ReliableOrdered)
                 {
-                    //ReceivedMessageManager.HandleMessage(_bytes);
+                    MessageReceived(_bytes);
                 }
                 else
                 {
@@ -240,6 +243,11 @@ namespace ChatSystem
                 }
 
             }
+        }
+
+        public void MessageReceived(byte[] data)
+        {
+            ChatMessageReceived?.Invoke(data);
         }
 
 
@@ -284,9 +292,6 @@ namespace ChatSystem
         }
 
         void INetEventListener.OnNetworkLatencyUpdate(NetPeer peer, int latency) { }
-
-
-
     }
 
 
