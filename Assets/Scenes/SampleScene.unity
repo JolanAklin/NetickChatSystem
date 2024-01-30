@@ -541,7 +541,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _chatSystemConfig: {fileID: 11400000, guid: 2593b36aeedb4274ca1a5522128cfd47, type: 2}
   _sandbox: {fileID: 0}
-  _currentGroup: {fileID: 11400000, guid: ffb8718d287ea35429262e890d518212, type: 2}
   _player: {fileID: 0}
 --- !u!4 &1111513737
 Transform:
@@ -588,7 +587,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5922d4a2e010aac4cb20e7dcf04236f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SandboxPrefab: {fileID: 0}
+  SandboxPrefab: {fileID: 3229918696122119535, guid: 488c644f6240d6247a48d9dc99f03d3f,
+    type: 3}
   Transport: {fileID: 11400000, guid: e6f3643cc76af5b4b992193836b09eb5, type: 2}
   Mode: 2
   Clients: 2
