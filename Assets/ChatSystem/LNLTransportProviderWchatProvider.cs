@@ -70,7 +70,7 @@ namespace ChatSystem
         private NetDataWriter _writer = new NetDataWriter();
         private string _machineName;
 
-        public event Action<byte[]> ChatMessageReceived;
+        public event Action<byte[], int> ChatMessageReceived;
 
         public override void Init()
         {
@@ -231,7 +231,13 @@ namespace ChatSystem
 
                 if (deliveryMethod == DeliveryMethod.ReliableOrdered)
                 {
-                    MessageReceived(_bytes);
+                    int sendersId = 0;
+                    if (_clients.ContainsKey(peer))
+                    {
+                        if(_clients[peer].AssociatedNetworkConnection != null)
+                            sendersId = _clients[peer].AssociatedNetworkConnection.Id;
+                    }
+                    MessageReceived(_bytes, sendersId);
                 }
                 else
                 {
@@ -245,9 +251,9 @@ namespace ChatSystem
             }
         }
 
-        public void MessageReceived(byte[] data)
+        public void MessageReceived(byte[] data, int sendersId)
         {
-            ChatMessageReceived?.Invoke(data);
+            ChatMessageReceived?.Invoke(data, sendersId);
         }
 
 

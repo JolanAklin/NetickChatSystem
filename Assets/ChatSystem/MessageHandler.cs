@@ -24,9 +24,9 @@ namespace ChatSystem
             _transport.ChatMessageReceived -= OnChatMessageReceived;
         }
 
-        private void OnChatMessageReceived(byte[] data)
+        private void OnChatMessageReceived(byte[] data, int id)
         {
-            Debug.Log("message received : " + System.Text.Encoding.UTF8.GetString(data));
+            Debug.Log("message received from "+id+" : " + System.Text.Encoding.UTF8.GetString(data));
         }
     }
 
