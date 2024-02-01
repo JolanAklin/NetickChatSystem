@@ -7,7 +7,12 @@ namespace ChatSystem
 {
     public class MessageSender : MonoBehaviour
     {
-        private NetDataWriter _writer = new NetDataWriter();
+        private NetDataWriter _writer;
+        private void Awake()
+        {
+            _writer = new NetDataWriter();
+        }
+
         public void SendChatMessage(IChatTransportConnection connection, string message)
         {
             Send(connection, message);

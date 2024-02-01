@@ -19,7 +19,7 @@ namespace ChatSystem
         public override NetworkTransport MakeTransportInstance() => new LNLTransportProviderWchat();
     }
 
-    public class LNLTransportProviderWchat : LiteNetLibTransport, INetEventListener
+    public class LNLTransportProviderWchat : LiteNetLibTransport, INetEventListener, IChatNetworkTransport
     {
 
         new public class LNLConnection : TransportConnection, IChatTransportConnection

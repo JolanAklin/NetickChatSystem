@@ -8,8 +8,8 @@ namespace ChatSystem
 {
     public class MessageHandler : MonoBehaviour
     {
-        private NetDataReader _netDataReader = new NetDataReader();
-        LNLTransportProviderWchat _transport; // TODO change this stuff so it doesnt depend on LNLTransportProviderWChat
+        private NetDataReader _netDataReader;
+        private IChatNetworkTransport _transport;
         private MessageSender _sender;
         private ConnectionManager _connectionManager;
 
@@ -20,8 +20,10 @@ namespace ChatSystem
             NetworkSandbox sandbox = GetComponent<NetworkSandbox>();
             _sender = GetComponent<MessageSender>();
             _connectionManager = GetComponent<ConnectionManager>();
-            _transport = (LNLTransportProviderWchat)sandbox.Transport;
+            _transport = (IChatNetworkTransport)sandbox.Transport;
             _transport.ChatMessageReceived += OnChatMessageReceived;
+
+            _netDataReader = new NetDataReader();
         }
 
         private void OnDestroy()
