@@ -1,7 +1,10 @@
 using LiteNetLib.Utils;
 using Netick.Unity;
 using System;
+using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Web;
 using UnityEngine;
 
 namespace ChatSystem
@@ -13,7 +16,7 @@ namespace ChatSystem
         private MessageSender _sender;
         private ConnectionManager _connectionManager;
 
-        public event Action<string> MessageReceived;
+        public event Action<string, string> MessageReceived;
 
         private void Start()
         {
@@ -24,6 +27,7 @@ namespace ChatSystem
             _transport.ChatMessageReceived += OnChatMessageReceived;
 
             _netDataReader = new NetDataReader();
+
         }
 
         private void OnDestroy()
@@ -34,17 +38,22 @@ namespace ChatSystem
         private void OnChatMessageReceived(byte[] data, int id)
         {
             _netDataReader.SetSource(data);
-            string message = _netDataReader.GetString();
             // dispatch the message to all client.
-            if(id != 0) // that means the message comes from a client.
+            if (id != 0) // that means the message comes from a client.
             {
-                _sender.SendChatMessage(_connectionManager.ClientConnections.Values.ToArray(), message);
+                string message = _netDataReader.GetString();
+                string sender = "<color=#ffb700>[CLIENT " + id + "]</color>";
+                _sender.SendMessageToClient(_connectionManager.ClientConnections.Values.ToArray(), sender, message);
             }
             else
             {
-                MessageReceived?.Invoke(message);
+                string sender = _netDataReader.GetString();
+                string message = _netDataReader.GetString();
+                message = HttpUtility.HtmlEncode(message);
+                string[] whitelist = { "color=", "color", "b", "lowercase", "uppercase", "i", "s", "u" };
+                sender = RichTextFiltering.FilterRichText(sender, whitelist);
+                MessageReceived?.Invoke(sender, message);
             }
         }
     }
-
 }

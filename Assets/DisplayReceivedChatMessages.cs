@@ -1,7 +1,5 @@
 using ChatSystem;
 using Netick.Unity;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -18,9 +16,9 @@ public class DisplayReceivedChatMessages : NetickBehaviour
         handler.MessageReceived += OnMessageReceived;
     }
 
-    private void OnMessageReceived (string message)
+    private void OnMessageReceived (string sender, string message)
     {
         GameObject textInstance = Instantiate(_textPrefab, _content.transform);
-        textInstance.GetComponent<TMP_Text>().text = message;
+        textInstance.GetComponent<TMP_Text>().text = sender + " " + message;
     }
 }

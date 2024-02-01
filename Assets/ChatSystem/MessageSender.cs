@@ -13,20 +13,41 @@ namespace ChatSystem
             _writer = new NetDataWriter();
         }
 
-        public void SendChatMessage(IChatTransportConnection connection, string message)
+        public void SendMessageToServer(IChatTransportConnection connection, string message)
         {
-            Send(connection, message);
+            SendToServer(connection, message);
         }
 
-        public void SendChatMessage(IChatTransportConnection[] connections, string message)
+        public void SendMessageToServer(IChatTransportConnection[] connections, string message)
         {
             foreach (IChatTransportConnection connection in connections)
             {
-                Send(connection, message);
+                SendToServer(connection, message);
             }
         }
 
-        private void Send(IChatTransportConnection connection, string message)
+        public void SendMessageToClient(IChatTransportConnection connection, string sender, string message)
+        {
+            SendToClient(connection, message, sender);
+        }
+
+        public void SendMessageToClient(IChatTransportConnection[] connections, string sender, string message)
+        {
+            foreach (IChatTransportConnection connection in connections)
+            {
+                SendToClient(connection, sender, message);
+            }
+        }
+
+        private void SendToClient(IChatTransportConnection connection, string sender, string message)
+        {
+            _writer.Reset();
+            _writer.Put(sender);
+            _writer.Put(message);
+            connection.ChatSend(_writer.Data);
+        }
+
+        private void SendToServer(IChatTransportConnection connection, string message)
         {
             _writer.Reset();
             _writer.Put(message);
