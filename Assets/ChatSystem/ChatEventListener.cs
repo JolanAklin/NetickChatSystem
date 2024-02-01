@@ -10,17 +10,31 @@ public class ChatEventListener : NetworkEvents
 {
     private MessageSender _sender;
     private ConnectionManager _connectionManager;
+    [SerializeField]
+    private List<NetickBehaviour> _registeredBehaviours;
 
     public override void OnStartup(NetworkSandbox sandbox)
     {
+        foreach (NetickBehaviour behaviour in _registeredBehaviours)
+        {
+            Sandbox.AttachBehaviour(behaviour);
+        }
         _sender = Sandbox.GetComponent<MessageSender>();
         _connectionManager = Sandbox.GetComponent<ConnectionManager>();
+    }
+
+    public override void OnShutdown(NetworkSandbox sandbox)
+    {
+        foreach (NetickBehaviour behaviour in _registeredBehaviours)
+        {
+            Sandbox.DeattachBehaviour(behaviour);
+        }
     }
 
     public override void OnClientConnected(NetworkSandbox sandbox, NetworkConnection client)
     {
         _connectionManager.ClientConnections.Add(client.Id, (IChatTransportConnection)client.TransportConnection);
-        _sender.SendChatMessage(_connectionManager.ClientConnections.Values.ToArray(), "a new client has connected " + client.Id);
+        _sender.SendChatMessage(_connectionManager.ClientConnections.Values.ToArray(), "a new client has connected " + client.PlayerId);
     }
 
     public override void OnConnectedToServer(NetworkSandbox sandbox, NetworkConnection server)

@@ -235,7 +235,7 @@ namespace ChatSystem
                     if (_clients.ContainsKey(peer))
                     {
                         if(_clients[peer].AssociatedNetworkConnection != null)
-                            sendersId = _clients[peer].AssociatedNetworkConnection.Id;
+                            sendersId = _clients[peer].AssociatedNetworkConnection.PlayerId;
                     }
                     MessageReceived(_bytes, sendersId);
                 }
