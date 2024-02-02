@@ -5,6 +5,7 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using System;
+using System.Collections.Generic;
 
 public class PlayerController : NetworkBehaviour, IChatPlayer
 {
@@ -17,11 +18,30 @@ public class PlayerController : NetworkBehaviour, IChatPlayer
     private GameObject _setNameUi;
     private GameObject _chatUi;
 
+    [SerializeField]
+    private TMP_Dropdown _teamDropdown;
+
     private TeamManager _teamManager;
+
+    private Dictionary<string, byte> _kvpForDropdown = new Dictionary<string, byte>();
 
     public override void NetworkStart()
     {
         _teamManager = Sandbox.GetComponent<TeamManager>();
+        List<string> options = new List<string>
+        {
+            "none"
+        };
+        _kvpForDropdown.Clear();
+        foreach (Team team in _teamManager.GetTeams())
+        {
+            options.Add(team.Name);
+            _kvpForDropdown.Add(team.Name, team.ID);
+        }
+        _teamDropdown.ClearOptions();
+        _teamDropdown.AddOptions(options);
+        _teamDropdown.onValueChanged.AddListener(OnTeamDropdownChanged);
+
         _chatUi = Sandbox.FindGameObjectWithTag("ChatUI");
         if(IsInputSource && Sandbox.IsClient)
         {
@@ -53,10 +73,26 @@ public class PlayerController : NetworkBehaviour, IChatPlayer
         //Debug.Log(PlayerName.Length);
     }
 
+    public void OnTeamDropdownChanged(int value)
+    {
+        byte teamID = 0;
+        if (_kvpForDropdown.ContainsKey(_teamDropdown.options[value].text))
+            teamID = _kvpForDropdown[_teamDropdown.options[value].text];
+        RPCChangeTeam(teamID);
+    }
+
+    [Rpc(source: RpcPeers.Everyone, target: RpcPeers.Owner, isReliable: true, localInvoke: false)]
+    public void RPCChangeTeam(byte teamID)
+    {
+        this.TeamID = teamID;
+    }
+
     public string Decorator()
     {
         Team team = _teamManager.GetTeam(TeamID);
-        string color = ColorUtility.ToHtmlStringRGB(team.Color);
+        string color= "";
+        if (team != null)
+            color = ColorUtility.ToHtmlStringRGB(team.Color);
         return "<color=#ffb700>[ <b>playername</b> ]</color> " + (TeamID == 0 ? "general" : "<color=#"+color+">team " + team.Name + "</color>") + " : ";
     }
 }
