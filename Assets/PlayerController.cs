@@ -4,10 +4,11 @@ using ChatSystem;
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class PlayerController : NetworkBehaviour, IChatPlayer
 {
-    [Networked]
+    [Networked(256)]
     public string PlayerName { get; set; }
 
     [SerializeField]
@@ -36,9 +37,18 @@ public class PlayerController : NetworkBehaviour, IChatPlayer
         _chatUi.SetActive(true);
     }
 
-    [Rpc(source: RpcPeers.Everyone, target: RpcPeers.Owner, isReliable: true, localInvoke: true)]
+    [Rpc(source: RpcPeers.Everyone, target: RpcPeers.Owner, isReliable: true, localInvoke: false)]
     public void RPCSetPlayerName(NetworkString256 playerName)
     {
         PlayerName = playerName.ToString();
+        Debug.Log(playerName.ToString() + " lorem ipsum dolore sit amat..."); // prints : my_player_name lorem ipsum dolore sit amat...
+        Debug.Log(PlayerName.ToString() + " lorem ipsum dolore sit amat..."); // prints : my_player_name
+        Debug.Log(PlayerName + " lorem ipsum dolore sit amat..."); // prints : my_player_name
+        Debug.Log(PlayerName.Length);
+    }
+
+    public string Decorator()
+    {
+        return "<color=#ffb700>[ <b>playername</b> ]</color>";
     }
 }

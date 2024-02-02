@@ -982,7 +982,7 @@ MonoBehaviour:
     type: 3}
   Transport: {fileID: 11400000, guid: b5856e1fc62ad084799cc9c877b84c8d, type: 2}
   Mode: 2
-  Clients: 2
+  Clients: 1
   StartServerInMultiplePeersMode: 1
   AutoStart: 1
   AutoConnect: 1

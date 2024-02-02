@@ -42,7 +42,8 @@ namespace ChatSystem
             if (id != 0) // that means the message comes from a client.
             {
                 string message = _netDataReader.GetString();
-                string sender = "<color=#ffb700>[CLIENT " + id + "]</color>";
+                Debug.Log(_connectionManager.ClientConnections[id].Player.PlayerName + "lorem ipsum dolore sit amat");
+                string sender = _connectionManager.ClientConnections[id].Player.Decorator();
                 _sender.SendMessageToClient(_connectionManager.ClientConnections.Values.ToArray(), sender, message);
             }
             else

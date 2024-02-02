@@ -37,37 +37,19 @@ public class ChatEventListener : NetworkEvents
 
     public override void OnClientConnected(NetworkSandbox sandbox, NetworkConnection client)
     {
-        _connectionManager.ClientConnections.Add(client.Id, (IChatTransportConnection)client.TransportConnection);
 
         GameObject player = sandbox.NetworkInstantiate(PlayerPrefab, Vector3.zero, Quaternion.identity, client).gameObject;
         client.PlayerObject = player;
         player.name = "player " + (sandbox.ConnectedPlayers.Count - 1);
+
+        if (player.TryGetComponent(out IChatPlayer chatPlayer))
+            _connectionManager.ClientConnections.Add(client.PlayerId, new ConnectionManager.ClientConnectionInfos((IChatTransportConnection)client.TransportConnection, chatPlayer));
+        else
+            Debug.LogError("The player must implement IChatPlayer");
     }
 
     public override void OnConnectedToServer(NetworkSandbox sandbox, NetworkConnection server)
     {
         _connectionManager.ServerConnection = (IChatTransportConnection)server.TransportConnection;
-    }
-
-    public override void OnSceneLoaded(NetworkSandbox sandbox)
-    {
-        if (sandbox.IsClient)
-            return;
-
-        for (int i = 0; i < sandbox.ConnectedPlayers.Count; i++)
-        {
-            // if SpawnPlayerForHost is set to false, we don't spawn a player for the server
-            // index zero is the server player
-
-            if (!SpawnPlayerForHost && i == 0)
-                continue;
-
-            var p = sandbox.ConnectedPlayers[i];
-
-            var spawnPos = Vector3.zero;
-            GameObject player = sandbox.NetworkInstantiate(PlayerPrefab, spawnPos, Quaternion.identity, p).gameObject;
-            p.PlayerObject = player;
-            player.name = "player " + (sandbox.ConnectedPlayers.Count - 1);
-        }
     }
 }

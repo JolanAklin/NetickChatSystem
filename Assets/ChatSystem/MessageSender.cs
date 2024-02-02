@@ -18,11 +18,11 @@ namespace ChatSystem
             SendToServer(connection, message);
         }
 
-        public void SendMessageToServer(IChatTransportConnection[] connections, string message)
+        public void SendMessageToServer(ConnectionManager.ClientConnectionInfos[] connections, string message)
         {
-            foreach (IChatTransportConnection connection in connections)
+            foreach (ConnectionManager.ClientConnectionInfos info in connections)
             {
-                SendToServer(connection, message);
+                SendToServer(info.Connection, message);
             }
         }
 
@@ -31,11 +31,11 @@ namespace ChatSystem
             SendToClient(connection, message, sender);
         }
 
-        public void SendMessageToClient(IChatTransportConnection[] connections, string sender, string message)
+        public void SendMessageToClient(ConnectionManager.ClientConnectionInfos[] connections, string sender, string message)
         {
-            foreach (IChatTransportConnection connection in connections)
+            foreach (ConnectionManager.ClientConnectionInfos info in connections)
             {
-                SendToClient(connection, sender, message);
+                SendToClient(info.Connection, sender, message);
             }
         }
 
