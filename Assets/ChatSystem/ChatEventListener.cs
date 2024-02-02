@@ -43,7 +43,10 @@ public class ChatEventListener : NetworkEvents
         player.name = "player " + (sandbox.ConnectedPlayers.Count - 1);
 
         if (player.TryGetComponent(out IChatPlayer chatPlayer))
+        {
             _connectionManager.ClientConnections.Add(client.PlayerId, new ConnectionManager.ClientConnectionInfos((IChatTransportConnection)client.TransportConnection, chatPlayer));
+            chatPlayer.Connection = (IChatTransportConnection)client.TransportConnection;
+        }
         else
             Debug.LogError("The player must implement IChatPlayer");
     }

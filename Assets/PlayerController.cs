@@ -13,6 +13,7 @@ public class PlayerController : NetworkBehaviour, IChatPlayer
     public string PlayerName { get; set; }
     [Networked]
     public byte TeamID { get; set; }
+    public IChatTransportConnection Connection { get; set; }
 
     [SerializeField]
     private GameObject _setNameUi;
@@ -53,7 +54,6 @@ public class PlayerController : NetworkBehaviour, IChatPlayer
             _setNameUi.SetActive(false);
             _chatUi.SetActive(false);
         }
-        TeamID = 1;
     }
 
     public void SetPlayerName(TMP_InputField inputField)
@@ -84,7 +84,9 @@ public class PlayerController : NetworkBehaviour, IChatPlayer
     [Rpc(source: RpcPeers.Everyone, target: RpcPeers.Owner, isReliable: true, localInvoke: false)]
     public void RPCChangeTeam(byte teamID)
     {
-        this.TeamID = teamID;
+        Team team = _teamManager.GetTeam(teamID);
+        if (team != null)
+            team.AddPlayer(this);
     }
 
     public string Decorator()

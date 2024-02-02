@@ -20,7 +20,8 @@ public class SendTestMessage : NetickBehaviour
 
     public void OnEndEdit()
     {
-        _sender.SendMessageToServer(_manager.ServerConnection, _inputField.text);
+        _sender.SendMessageToServer(_manager.ServerConnection, _inputField.text, true);
         _inputField.text = "";
+        _inputField.Select();
     }
 }

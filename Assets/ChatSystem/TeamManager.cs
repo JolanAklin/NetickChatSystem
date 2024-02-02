@@ -10,6 +10,7 @@ namespace ChatSystem
     {
         [SerializeField]
         private List<Team> _teams = new List<Team>();
+        private Dictionary<string, Team> _teamNameToTeam = new Dictionary<string, Team>();
 
         private void Awake()
         {
@@ -22,6 +23,12 @@ namespace ChatSystem
             for (int i = 0; i < _teams.Count; i++)
             {
                 _teams[i].ID = (byte)(i+1);
+                if(_teamNameToTeam.ContainsKey(_teams[i].Name))
+                {
+                    Debug.LogError(_teams[i].Name + " already exists. Name should be unique");
+                    continue;
+                }
+                _teamNameToTeam.Add(_teams[i].Name, _teams[i]);
             }
         }
 
@@ -51,11 +58,26 @@ namespace ChatSystem
         private byte id;
         public byte ID { get => id; set { if(id == 0) id = value; } }
 
+        private List<IChatPlayer> _players;
+
         public Team(string name, Color teamColor)
         {
             _name = name;
             _color = teamColor;
             id = 0;
         }
+
+        public void AddPlayer(IChatPlayer player)
+        {
+            if(_players == null) _players = new List<IChatPlayer>();
+            if (_players.Contains(player)) Debug.LogWarning("The player "+player.PlayerName+" is already in the " + _name + " team.");
+            else
+            {
+                player.TeamID = id;
+                _players.Add(player);
+            }
+        }
+
+        public IChatPlayer[] getPlayers() { return _players.ToArray(); }
     }
 }

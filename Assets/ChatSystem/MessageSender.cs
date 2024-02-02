@@ -1,6 +1,7 @@
 ﻿using LiteNetLib.Utils;
 using Netick.Unity;
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 
 namespace ChatSystem
@@ -13,22 +14,14 @@ namespace ChatSystem
             _writer = new NetDataWriter();
         }
 
-        public void SendMessageToServer(IChatTransportConnection connection, string message)
+        public void SendMessageToServer(IChatTransportConnection connection, string message, bool toTeam)
         {
-            SendToServer(connection, message);
-        }
-
-        public void SendMessageToServer(ConnectionManager.ClientConnectionInfos[] connections, string message)
-        {
-            foreach (ConnectionManager.ClientConnectionInfos info in connections)
-            {
-                SendToServer(info.Connection, message);
-            }
+            SendToServer(connection, message, toTeam);
         }
 
         public void SendMessageToClient(IChatTransportConnection connection, string sender, string message)
         {
-            SendToClient(connection, message, sender);
+            SendToClient(connection, sender, message);
         }
 
         public void SendMessageToClient(ConnectionManager.ClientConnectionInfos[] connections, string sender, string message)
@@ -47,9 +40,10 @@ namespace ChatSystem
             connection.ChatSend(_writer.Data);
         }
 
-        private void SendToServer(IChatTransportConnection connection, string message)
+        private void SendToServer(IChatTransportConnection connection, string message, bool toTeam)
         {
             _writer.Reset();
+            _writer.Put(toTeam);
             _writer.Put(message);
             connection.ChatSend(_writer.Data);
         }
