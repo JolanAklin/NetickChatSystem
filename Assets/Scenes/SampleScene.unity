@@ -1066,6 +1066,9 @@ MonoBehaviour:
   _registeredBehaviours:
   - {fileID: 1852684049}
   - {fileID: 507378414}
+  PlayerPrefab: {fileID: 7396191088139645323, guid: 856b9c2ab7b0c2448b40017f2e1b964e,
+    type: 3}
+  SpawnPlayerForHost: 0
 --- !u!1 &1284670696
 GameObject:
   m_ObjectHideFlags: 0
@@ -1080,7 +1083,7 @@ GameObject:
   - component: {fileID: 1284670697}
   m_Layer: 5
   m_Name: Canvas
-  m_TagString: Untagged
+  m_TagString: ChatUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
