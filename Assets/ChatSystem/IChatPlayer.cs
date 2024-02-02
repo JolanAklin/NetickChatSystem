@@ -9,6 +9,9 @@ namespace ChatSystem
         [Networked]
         public string PlayerName { get; set; }
 
+        [Networked]
+        public byte TeamID { get; set; }
+
         [Rpc(source: RpcPeers.Everyone, target: RpcPeers.Owner, isReliable: true, localInvoke: true)]
         public void RPCSetPlayerName(NetworkString256 playerName);
 
