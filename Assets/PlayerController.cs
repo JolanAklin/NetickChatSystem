@@ -6,6 +6,7 @@ using UnityEngine;
 using TMPro;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 public class PlayerController : NetworkBehaviour, IChatPlayer
 {
@@ -55,6 +56,31 @@ public class PlayerController : NetworkBehaviour, IChatPlayer
             _chatUi.SetActive(false);
         }
     }
+
+    [OnChanged(nameof(PlayerName))]
+    public void OnPlayerNameChanged(OnChangedData onChangedData)
+    {
+        if (!IsInputSource) return;
+        _chatUi.GetComponentInChildren<InfosPanel>().PlayerNameText.text = PlayerName;
+    }
+
+    [OnChanged(nameof(TeamID))]
+    public void OnTeamIDChanged(OnChangedData onChangedData)
+    {
+        if (!IsInputSource) return;
+        Team team = _teamManager.GetTeam(TeamID);
+        if(team != null)
+        {
+            string color = ColorUtility.ToHtmlStringRGB(team.Color);
+            _chatUi.GetComponentInChildren<InfosPanel>().TeamText.text = "<color=#" + color + ">" + team.Name + "</color>";
+        }
+        else
+        {
+            _chatUi.GetComponentInChildren<InfosPanel>().TeamText.text = "none";
+        }
+
+    }
+
 
     public void SetPlayerName(TMP_InputField inputField)
     {
