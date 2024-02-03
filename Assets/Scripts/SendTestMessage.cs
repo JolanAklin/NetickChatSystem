@@ -19,7 +19,7 @@ public class SendTestMessage : NetickBehaviour
 
     public void OnEndEdit()
     {
-        _chatSystem.MessageSender.SendMessageToServer(_chatSystem.ConnectionManager.ServerConnection, _inputField.text, true);
+        _chatSystem.MessageSender.SendMessageToServer(_chatSystem.ConnectionManager.ServerConnection, _inputField.text, MessageSender.Destination.general);
         _inputField.text = "";
         _inputField.Select();
     }

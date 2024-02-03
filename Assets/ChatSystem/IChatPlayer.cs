@@ -17,6 +17,6 @@ namespace ChatSystem
         [Rpc(source: RpcPeers.Everyone, target: RpcPeers.Owner, isReliable: true, localInvoke: true)]
         public void RPCSetPlayerName(NetworkString256 playerName);
 
-        public string Decorator();
+        public string Decorator(MessageSender.Destination destination);
     }
 }

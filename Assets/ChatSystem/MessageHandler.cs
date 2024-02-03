@@ -34,10 +34,10 @@ namespace ChatSystem
             // dispatch the message to all client.
             if (id != 0) // that means the message comes from a client.
             {
-                bool toTeam = _netDataReader.GetBool();
+                MessageSender.Destination destination = (MessageSender.Destination)_netDataReader.GetByte();
                 string message = _netDataReader.GetString();
-                string sender = _chatSystem.ConnectionManager.ClientConnections[id].Player.Decorator();
-                if(toTeam && _chatSystem.ConnectionManager.ClientConnections[id].Player.TeamID != 0)
+                string sender = _chatSystem.ConnectionManager.ClientConnections[id].Player.Decorator(destination);
+                if(destination == MessageSender.Destination.team && _chatSystem.ConnectionManager.ClientConnections[id].Player.TeamID != 0)
                 {
                     Team team = _chatSystem.TeamManager.GetTeam(_chatSystem.ConnectionManager.ClientConnections[id].Player.TeamID);
                     if (team == null) Debug.LogError("Team could not be found");
@@ -46,7 +46,7 @@ namespace ChatSystem
                         _chatSystem.MessageSender.SendMessageToClient(player.Connection, sender, message);
                     }
                 }
-                else
+                else if(destination == MessageSender.Destination.general)
                 {
                     _chatSystem.MessageSender.SendMessageToClient(_chatSystem.ConnectionManager.ClientConnections.Values.ToArray(), sender, message);
                 }

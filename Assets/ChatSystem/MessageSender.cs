@@ -14,9 +14,9 @@ namespace ChatSystem
             _writer = new NetDataWriter();
         }
 
-        public void SendMessageToServer(IChatTransportConnection connection, string message, bool toTeam)
+        public void SendMessageToServer(IChatTransportConnection connection, string message, Destination destination, int playerId = -1)
         {
-            SendToServer(connection, message, toTeam);
+            SendToServer(connection, message, destination, playerId);
         }
 
         public void SendMessageToClient(IChatTransportConnection connection, string sender, string message)
@@ -40,12 +40,24 @@ namespace ChatSystem
             connection.ChatSend(_writer.Data);
         }
 
-        private void SendToServer(IChatTransportConnection connection, string message, bool toTeam)
+        private void SendToServer(IChatTransportConnection connection, string message, Destination destination, int playerId = -1)
         {
+            if(destination == Destination.player && playerId == -1)
+            {
+                Debug.LogError("You must provide a playerId for sending message to a player");
+                return;
+            }
             _writer.Reset();
-            _writer.Put(toTeam);
+            _writer.Put((byte)destination);
             _writer.Put(message);
             connection.ChatSend(_writer.Data);
+        }
+
+        public enum Destination: byte
+        {
+            general = 0,
+            team = 1,
+            player = 2,
         }
     }
 }

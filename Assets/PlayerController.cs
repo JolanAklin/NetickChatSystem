@@ -115,12 +115,18 @@ public class PlayerController : NetworkBehaviour, IChatPlayer
             team.AddPlayer(this);
     }
 
-    public string Decorator()
+    public string Decorator(MessageSender.Destination destination)
     {
         Team team = _chatSystem.TeamManager.GetTeam(TeamID);
         string color= "";
         if (team != null)
             color = ColorUtility.ToHtmlStringRGB(team.Color);
-        return "<color=#ffb700>[ <b>playername</b> ]</color> " + (TeamID == 0 ? "general" : "<color=#"+color+">team " + team.Name + "</color>") + " : ";
+
+        string decorator = "<color=#ffb700>[ <b>playername</b> ]</color> " + (TeamID == 0 ? "general" : "<color=#"+color+">team " + team.Name + "</color>") + " : ";
+        if(destination == MessageSender.Destination.general)
+        {
+            decorator = "[GENERAL] " + decorator;
+        }
+        return decorator;
     }
 }
