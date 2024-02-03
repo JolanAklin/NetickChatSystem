@@ -6,10 +6,10 @@ using UnityEngine;
 
 namespace ChatSystem
 {
-    public class MessageSender : MonoBehaviour
+    public class MessageSender
     {
         private NetDataWriter _writer;
-        private void Awake()
+        public MessageSender()
         {
             _writer = new NetDataWriter();
         }

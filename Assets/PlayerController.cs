@@ -23,19 +23,19 @@ public class PlayerController : NetworkBehaviour, IChatPlayer
     [SerializeField]
     private TMP_Dropdown _teamDropdown;
 
-    private TeamManager _teamManager;
+    private ChatSystemManager _chatSystem;
 
     private Dictionary<string, byte> _kvpForDropdown = new Dictionary<string, byte>();
 
     public override void NetworkStart()
     {
-        _teamManager = Sandbox.GetComponent<TeamManager>();
+        _chatSystem = Sandbox.GetComponent<ChatSystemManager>();
         List<string> options = new List<string>
         {
             "none"
         };
         _kvpForDropdown.Clear();
-        foreach (Team team in _teamManager.GetTeams())
+        foreach (Team team in _chatSystem.TeamManager.GetTeams())
         {
             options.Add(team.Name);
             _kvpForDropdown.Add(team.Name, team.ID);
@@ -68,7 +68,7 @@ public class PlayerController : NetworkBehaviour, IChatPlayer
     public void OnTeamIDChanged(OnChangedData onChangedData)
     {
         if (!IsInputSource) return;
-        Team team = _teamManager.GetTeam(TeamID);
+        Team team = _chatSystem.TeamManager.GetTeam(TeamID);
         if(team != null)
         {
             string color = ColorUtility.ToHtmlStringRGB(team.Color);
@@ -110,14 +110,14 @@ public class PlayerController : NetworkBehaviour, IChatPlayer
     [Rpc(source: RpcPeers.Everyone, target: RpcPeers.Owner, isReliable: true, localInvoke: false)]
     public void RPCChangeTeam(byte teamID)
     {
-        Team team = _teamManager.GetTeam(teamID);
+        Team team = _chatSystem.TeamManager.GetTeam(teamID);
         if (team != null)
             team.AddPlayer(this);
     }
 
     public string Decorator()
     {
-        Team team = _teamManager.GetTeam(TeamID);
+        Team team = _chatSystem.TeamManager.GetTeam(TeamID);
         string color= "";
         if (team != null)
             color = ColorUtility.ToHtmlStringRGB(team.Color);

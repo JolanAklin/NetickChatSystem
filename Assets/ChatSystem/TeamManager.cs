@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace ChatSystem
 {
-    public class TeamManager : MonoBehaviour
+    public class TeamManager
     {
         [SerializeField]
-        private List<Team> _teams = new List<Team>();
-        private Dictionary<string, Team> _teamNameToTeam = new Dictionary<string, Team>();
+        private List<Team> _teams;
+        private Dictionary<string, Team> _teamNameToTeam;
 
-        private void Awake()
+        public TeamManager(List<Team> teams)
         {
-            if(_teams.Count >= 255)
+            _teams = teams;
+            _teamNameToTeam = new Dictionary<string, Team>();
+            if (_teams.Count >= 255)
             {
                 Debug.Log("There should not be more than 255 teams");
                 return;
@@ -22,8 +23,8 @@ namespace ChatSystem
 
             for (int i = 0; i < _teams.Count; i++)
             {
-                _teams[i].ID = (byte)(i+1);
-                if(_teamNameToTeam.ContainsKey(_teams[i].Name))
+                _teams[i].ID = (byte)(i + 1);
+                if (_teamNameToTeam.ContainsKey(_teams[i].Name))
                 {
                     Debug.LogError(_teams[i].Name + " already exists. Name should be unique");
                     continue;
@@ -54,7 +55,6 @@ namespace ChatSystem
         private Color _color;
         public Color Color { get => _color; }
 
-        [SerializeField]
         private byte id;
         public byte ID { get => id; set { if(id == 0) id = value; } }
 

@@ -9,7 +9,7 @@ using Netick.Samples.FPS;
 
 public class ChatEventListener : NetworkEvents
 {
-    private ConnectionManager _connectionManager;
+    private ChatSystemManager _chatSystem;
     [SerializeField]
     private List<NetickBehaviour> _registeredBehaviours;
 
@@ -20,11 +20,11 @@ public class ChatEventListener : NetworkEvents
 
     public override void OnStartup(NetworkSandbox sandbox)
     {
+        _chatSystem = Sandbox.GetComponent<ChatSystemManager>();
         foreach (NetickBehaviour behaviour in _registeredBehaviours)
         {
             Sandbox.AttachBehaviour(behaviour);
         }
-        _connectionManager = Sandbox.GetComponent<ConnectionManager>();
     }
 
     public override void OnShutdown(NetworkSandbox sandbox)
@@ -44,7 +44,7 @@ public class ChatEventListener : NetworkEvents
 
         if (player.TryGetComponent(out IChatPlayer chatPlayer))
         {
-            _connectionManager.ClientConnections.Add(client.PlayerId, new ConnectionManager.ClientConnectionInfos((IChatTransportConnection)client.TransportConnection, chatPlayer));
+            _chatSystem.ConnectionManager.ClientConnections.Add(client.PlayerId, new ConnectionManager.ClientConnectionInfos((IChatTransportConnection)client.TransportConnection, chatPlayer));
             chatPlayer.Connection = (IChatTransportConnection)client.TransportConnection;
         }
         else
@@ -53,6 +53,6 @@ public class ChatEventListener : NetworkEvents
 
     public override void OnConnectedToServer(NetworkSandbox sandbox, NetworkConnection server)
     {
-        _connectionManager.ServerConnection = (IChatTransportConnection)server.TransportConnection;
+        _chatSystem.ConnectionManager.ServerConnection = (IChatTransportConnection)server.TransportConnection;
     }
 }

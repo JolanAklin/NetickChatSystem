@@ -5,11 +5,15 @@ using UnityEngine;
 
 namespace ChatSystem
 {
-    public class ConnectionManager : MonoBehaviour
+    public class ConnectionManager
     {
-        public Dictionary<int, ClientConnectionInfos> ClientConnections = new Dictionary<int, ClientConnectionInfos>();
-
+        public Dictionary<int, ClientConnectionInfos> ClientConnections;
         public IChatTransportConnection ServerConnection;
+
+        public ConnectionManager()
+        {
+            ClientConnections = new Dictionary<int, ClientConnectionInfos>();
+        }
 
         public struct ClientConnectionInfos
         {

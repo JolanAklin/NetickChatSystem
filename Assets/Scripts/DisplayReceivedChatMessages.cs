@@ -12,8 +12,8 @@ public class DisplayReceivedChatMessages : NetickBehaviour
 
     public override void NetworkStart()
     {
-        MessageHandler handler = Sandbox.GetComponent<MessageHandler>();
-        handler.MessageReceived += OnMessageReceived;
+        ChatSystemManager mgr = Sandbox.GetComponent<ChatSystemManager>();
+        mgr.MessageHandler.MessageReceived += OnMessageReceived;
     }
 
     private void OnMessageReceived (string sender, string message)

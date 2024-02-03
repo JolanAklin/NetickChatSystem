@@ -9,10 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7487687396765216879}
-  - component: {fileID: 42882048543707961}
-  - component: {fileID: 6425902267262110975}
-  - component: {fileID: 3608388975618252495}
-  - component: {fileID: 7791299509663346679}
+  - component: {fileID: 8655186466130482667}
   m_Layer: 0
   m_Name: Sandbox prefab
   m_TagString: Untagged
@@ -35,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &42882048543707961
+--- !u!114 &8655186466130482667
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,47 +41,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3229918696122119535}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e75d6dd291eef143ae4f3a6f5ed8ce9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6425902267262110975
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3229918696122119535}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a825627b5f56924c969246883067173, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3608388975618252495
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3229918696122119535}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e75f572bb8ff3447bc49a87cbf666d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7791299509663346679
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3229918696122119535}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15c97cc45b1ed3c4383e29c9c256d6e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f44caa0cdee0514fa71ab5c68328727, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _teams:
   - _name: Red
     _color: {r: 1, g: 0, b: 0, a: 1}
   - _name: Blue
-    _color: {r: 0, g: 0.4199891, b: 1, a: 1}
+    _color: {r: 0, g: 0.30280232, b: 1, a: 1}
