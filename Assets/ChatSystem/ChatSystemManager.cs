@@ -1,3 +1,4 @@
+using Netick;
 using Netick.Unity;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,6 +29,22 @@ namespace ChatSystem
         private void OnDestroy()
         {
             MessageHandler.RemoveChatMessageReceivedCallBack();
+        }
+
+        public void RegisterPlayer(GameObject player, NetworkConnection client)
+        {
+            if (player.TryGetComponent(out IChatPlayer chatPlayer))
+            {
+                ConnectionManager.ClientConnections.Add(client.PlayerId, new ConnectionManager.ClientConnectionInfos((IChatTransportConnection)client.TransportConnection, chatPlayer));
+                chatPlayer.Connection = (IChatTransportConnection)client.TransportConnection;
+            }
+            else
+                Debug.LogError("The player must implement IChatPlayer");
+        }
+
+        public void SaveServerConnection(NetworkConnection connection)
+        {
+            ConnectionManager.ServerConnection = (IChatTransportConnection)connection.TransportConnection;
         }
     }
 }

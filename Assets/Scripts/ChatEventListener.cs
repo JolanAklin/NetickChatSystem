@@ -42,17 +42,11 @@ public class ChatEventListener : NetworkEvents
         client.PlayerObject = player;
         player.name = "player " + (sandbox.ConnectedPlayers.Count - 1);
 
-        if (player.TryGetComponent(out IChatPlayer chatPlayer))
-        {
-            _chatSystem.ConnectionManager.ClientConnections.Add(client.PlayerId, new ConnectionManager.ClientConnectionInfos((IChatTransportConnection)client.TransportConnection, chatPlayer));
-            chatPlayer.Connection = (IChatTransportConnection)client.TransportConnection;
-        }
-        else
-            Debug.LogError("The player must implement IChatPlayer");
+        _chatSystem.RegisterPlayer(player, client);
     }
 
     public override void OnConnectedToServer(NetworkSandbox sandbox, NetworkConnection server)
     {
-        _chatSystem.ConnectionManager.ServerConnection = (IChatTransportConnection)server.TransportConnection;
+        _chatSystem.SaveServerConnection(server);
     }
 }
