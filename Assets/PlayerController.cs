@@ -93,10 +93,6 @@ public class PlayerController : NetworkBehaviour, IChatPlayer
     public void RPCSetPlayerName(NetworkString256 playerName)
     {
         PlayerName = playerName.ToString();
-        //Debug.Log(playerName.ToString() + " lorem ipsum dolore sit amat..."); // prints : my_player_name lorem ipsum dolore sit amat...
-        //Debug.Log(PlayerName.ToString() + " lorem ipsum dolore sit amat..."); // prints : my_player_name
-        //Debug.Log(PlayerName + " lorem ipsum dolore sit amat..."); // prints : my_player_name
-        //Debug.Log(PlayerName.Length);
     }
 
     public void OnTeamDropdownChanged(int value)
@@ -122,7 +118,7 @@ public class PlayerController : NetworkBehaviour, IChatPlayer
         if (team != null)
             color = ColorUtility.ToHtmlStringRGB(team.Color);
 
-        string decorator = "<color=#ffb700>[ <b>playername</b> ]</color> " + (TeamID == 0 ? "general" : "<color=#"+color+">team " + team.Name + "</color>") + " : ";
+        string decorator = "<color=#ffb700>[ <b>" + PlayerName + "</b> ]</color> " + (TeamID == 0 ? "general" : "<color=#"+color+">team " + team.Name + "</color>") + " : ";
         if(destination == MessageSender.Destination.general)
         {
             decorator = "[GENERAL] " + decorator;
