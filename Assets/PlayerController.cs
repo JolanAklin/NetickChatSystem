@@ -45,7 +45,7 @@ public class PlayerController : NetworkBehaviour, IChatPlayer
         _teamDropdown.onValueChanged.AddListener(OnTeamDropdownChanged);
 
         _chatUi = Sandbox.FindGameObjectWithTag("ChatUI");
-        if(IsInputSource && Sandbox.IsClient)
+        if(IsInputSource)
         {
             _setNameUi.SetActive(true);
             _chatUi.SetActive(false);
@@ -111,14 +111,25 @@ public class PlayerController : NetworkBehaviour, IChatPlayer
             team.AddPlayer(this);
     }
 
-    public string Decorator(MessageSender.Destination destination)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="destination">Where the message will be sent (General, team, to a specific player)</param>
+    /// <param name="isSender">If the player is the sender of the message</param>
+    /// <param name="toPlayer">toPlayer will only be set when the destination is a player</param>
+    /// <returns></returns>
+    public string Decorator(MessageSender.Destination destination, bool isSender, IChatPlayer toPlayer = null)
     {
         Team team = _chatSystem.TeamManager.GetTeam(TeamID);
         string color= "";
         if (team != null)
             color = ColorUtility.ToHtmlStringRGB(team.Color);
-
         string decorator = "<color=#ffb700>[ <b>" + PlayerName + "</b> ]</color> " + (TeamID == 0 ? "general" : "<color=#"+color+">team " + team.Name + "</color>") + " : ";
+        if(destination == MessageSender.Destination.player)
+        {
+            if (isSender) decorator = "You whispered to " + toPlayer.PlayerName + " : ";
+            else decorator += " whispered : ";
+        }
         if(destination == MessageSender.Destination.general)
         {
             decorator = "[GENERAL] " + decorator;

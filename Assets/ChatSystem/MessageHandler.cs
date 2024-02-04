@@ -35,8 +35,10 @@ namespace ChatSystem
             if (id != 0) // that means the message comes from a client.
             {
                 MessageSender.Destination destination = (MessageSender.Destination)_netDataReader.GetByte();
+                int playerId = -1;
+                if (destination == MessageSender.Destination.player) playerId = _netDataReader.GetInt();
                 string message = _netDataReader.GetString();
-                string sender = _chatSystem.ConnectionManager.ClientConnections[id].Player.Decorator(destination);
+                string sender = _chatSystem.ConnectionManager.ClientConnections[id].Player.Decorator(destination, false);
                 if(destination == MessageSender.Destination.team && _chatSystem.ConnectionManager.ClientConnections[id].Player.TeamID != 0)
                 {
                     Team team = _chatSystem.TeamManager.GetTeam(_chatSystem.ConnectionManager.ClientConnections[id].Player.TeamID);
@@ -49,6 +51,13 @@ namespace ChatSystem
                 else if(destination == MessageSender.Destination.general)
                 {
                     _chatSystem.MessageSender.SendMessageToClient(_chatSystem.ConnectionManager.ClientConnections.Values.ToArray(), sender, message);
+                }
+                else if(destination == MessageSender.Destination.player && playerId > -1)
+                {
+                    string toPlayerSender = _chatSystem.ConnectionManager.ClientConnections[id].Player.Decorator(destination, false, _chatSystem.ConnectionManager.ClientConnections[playerId].Player);
+                    string toSender = _chatSystem.ConnectionManager.ClientConnections[id].Player.Decorator(destination, true, _chatSystem.ConnectionManager.ClientConnections[id].Player);
+                    _chatSystem.MessageSender.SendMessageToClient(_chatSystem.ConnectionManager.ClientConnections[id].Connection,toSender, message);
+                    _chatSystem.MessageSender.SendMessageToClient(_chatSystem.ConnectionManager.ClientConnections[playerId].Connection, toPlayerSender, message);
                 }
             }
             else

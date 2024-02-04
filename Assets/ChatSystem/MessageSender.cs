@@ -49,6 +49,7 @@ namespace ChatSystem
             }
             _writer.Reset();
             _writer.Put((byte)destination);
+            if(destination == Destination.player) { _writer.Put(playerId); }
             _writer.Put(message);
             connection.ChatSend(_writer.Data);
         }
